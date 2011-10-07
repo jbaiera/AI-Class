@@ -1,0 +1,16 @@
+Do one from group I, two from group II, and two from group III. All programs are to be written in lisp.
+
+Group I.
+    1. Write a recursive program to compute the Fibonacci sequence.
+    2. Write a recursive program to compute the average of a sequence of numbers in a list.
+
+Group II.
+    1. Write an iterative program which reads in integers from the terminal and outputs the type of the number.
+    2. Write an iterative program which reads a file containing the midterm grades of the ten students in class and computes the average, median, and range of scores.
+    3. Write an iterative program which sorts the elements of a list using quicksort.
+
+Group III.
+    1. Write an iterative program which averages a 16x16 matrix into a 4x4 matrix such that every 4x4 matrix of the original matrix is averaged to generate one element in the output matrix.
+    2. Write an iterative program that performs pyramid averaging. In pyramid averaging, the initial nxn matrix is summarized by taking the average of the 4x4 cells each time. (Example: 64x64 -> 16x16 -> 4x4 -> 1x1)
+    3. Write a recursive program which adds two polynomials.
+
