@@ -11,7 +11,7 @@
         (T 
             (cons 
                 (list (+ (first (first polyX)) (first (first polyY))) (second (first polyX)))
-                (addPoly (rest polyY) (rest polyY))
+                (addPoly (rest polyX) (rest polyY))
             )
         )
     )
