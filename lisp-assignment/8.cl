@@ -2,8 +2,8 @@
 
 (defun addPoly (polyX polyY)
     (cond 
-        ((= (length polyX) 0) (return polyY))
-        ((= (length polyY) 0) (return polyX))
+        ((= (length polyX) 0) polyY)
+        ((= (length polyY) 0) polyX)
         ((> (second (first polyX)) (second (first polyY)))
             (cons (first polyX) (addPoly (rest polyX) polyY)))
         ((< (second (first polyX)) (second (first polyY)))
