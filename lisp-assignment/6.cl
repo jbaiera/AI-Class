@@ -6,4 +6,13 @@
             (setq sum (+ sum (nth i (nth j matrix))))))
     (/ sum (* size size)))
 
+(defun average-matrix (matrix)
+    (setq newmatrix ())
+    (loop for i from 0 to 3 do
+        (setq row ())
+        (loop for j from 0 to 3 do
+            (setq row (cons (average-square matrix 4 (* i 4) (* j 4)) row))
+            )
+        (setq newmatrix (cons row newmatrix)))
+    (newmatrix))
 
