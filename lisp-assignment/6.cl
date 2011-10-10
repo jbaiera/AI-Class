@@ -13,5 +13,5 @@
         (loop for j from 0 to 3 do
             (setq row (cons (average-square matrix 4 (* i 4) (* j 4)) row)))
         (setq newmatrix (cons row newmatrix)))
-    (newmatrix))
+    newmatrix)
 
