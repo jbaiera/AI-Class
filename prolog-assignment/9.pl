@@ -21,3 +21,10 @@ find(Str, Line, Pairs, Pos) :- length(Str, Length), substring(Length, Line, Sub)
 linePairs(_, [], []).
 linePairs(LineNo, [P|Ps], Pairs) :- linePairs(LineNo, Ps, NewPairs), Pairs = [LineNo-P | NewPairs].
 
+search(_, [], []).
+search(Str, [L|Ls], Pairs) :- search(Str, [L|Ls], Pairs, 0).
+search(Str, [], [], _).
+search(Str, [L|Ls], Pairs, LineNo) :- find(Str, L, R), linePairs(LineNo, R, LP),
+    (Ls \= []   -> NewLine is LineNo+1, search(Str, Ls, NP, NewLine), Pairs = [LP | NP]
+    ;Ls == []   -> Pairs = LP).
+
