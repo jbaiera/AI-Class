@@ -18,3 +18,6 @@ find(Str, Line, Pairs, Pos) :- length(Str, Length), substring(Length, Line, Sub)
     (Str == Sub     -> Pairs = [Pos|NewPairs]
     ;Str \= Sub     -> Pairs = NewPairs).
 
+linePairs(_, [], []).
+linePairs(LineNo, [P|Ps], Pairs) :- linePairs(LineNo, Ps, NewPairs), Pairs = [LineNo-P | NewPairs].
+
