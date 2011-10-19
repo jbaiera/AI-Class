@@ -33,15 +33,14 @@ readExams(Stream,Record) :-
 
 readFinal(Stream,Record) :-
     read(Stream,Final),
-    studentFinal(Record,Final),
-    print(Record), nl.
+    studentFinal(Record,Final).
 
 processStudent(InFile) :-
     openFileToRead(InFile, InStream),
     processStudent(InStream, Student),
+    studentName(Student, Name),
     finalGrade(Student, FinalGrade),
-    print(FinalGrade), nl,
-    print(Student), nl, print('--').
+    format('Final grade for ~a is ~4g', [Name, FinalGrade]),
 
 processStudent(InStream, Student) :-
     student(Record),
