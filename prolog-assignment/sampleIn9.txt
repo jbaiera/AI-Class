@@ -1,0 +1,6 @@
+'This is a file.'.
+'We may want to find requests in here'.
+'so we need to look around and put some frequence strings.'.
+'What we want is a word repeated over and over'.
+'like the word "we" which we happen to use a lot'.
+'"weeee!"'.
