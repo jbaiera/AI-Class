@@ -35,6 +35,6 @@ searchfile(Filename, Searchstring, Locations) :- openfile(Filename, Stream), get
 openfile(InFile, InStream) :- open(InFile, read, InStream).
 closeafile(InStream) :- close(InStream).
 
-getlinelist(Stream, []) :- at_end_of_stream(Stream).
-getlinelist(Stream, [X|L]) :- \+ at_end_of_stream(Stream) -> read(Stream,X), getlinelist(Stream,L).
+getlinelist(end-of-file, []).
+getlinelist(Stream, [X|L]) :- read(Stream, X), getlinelist(Stream, L).
 
