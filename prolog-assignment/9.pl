@@ -25,21 +25,24 @@ search(_, [], []).
 search(Str, [L|Ls], Pairs) :- search(Str, [L|Ls], Pairs, 0).
 search(Str, [], [], _).
 search(Str, [L|Ls], Pairs, LineNo) :- find(Str, L, R), linePairs(LineNo, R, LP),
-    (Ls \= []   -> NewLine is LineNo+1, search(Str, Ls, NP, NewLine), Pairs = [LP | NP]
+    (Ls \= []   -> NewLine is LineNo+1, search(Str, Ls, NP, NewLine),
+        (LP \= [] -> append(LP, NP, Pairs)
+        ;LP == [] -> Pairs = NP)
     ;Ls == []   -> Pairs = LP).
 
 searchfile(Filename, Searchstring, Locations) :-
     openfile(Filename, Stream),
     getlinelist(Stream, Lines),
     closeafile(Stream),
-    search(Searchstring, Lines, Locations).
+    atom_chars(Searchstring, C),
+    search(C, Lines, Locations).
 
 openfile(InFile, InStream) :- open(InFile, read, InStream).
 closeafile(InStream) :- close(InStream).
 
 getlinelist(Stream, Lines) :- stream_property(Stream, end_of_stream(End)),
-    (End == not -> read(Stream, X),
-        getlinelist(Stream, L), Lines = [X|L]
+    (End == not -> read(Stream, X), atom_chars(X, C),
+        getlinelist(Stream, L), Lines = [C|L]
     ;End == at -> Lines = []).
 
 
