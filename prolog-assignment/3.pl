@@ -40,7 +40,7 @@ processStudent(InFile) :-
     processStudent(InStream, Student),
     studentName(Student, Name),
     finalGrade(Student, FinalGrade),
-    format('Final grade for ~a is ~4g', [Name, FinalGrade]),
+    format('Final grade for ~a is ~4g', [Name, FinalGrade]).
 
 processStudent(InStream, Student) :-
     student(Record),
