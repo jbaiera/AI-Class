@@ -28,3 +28,9 @@ search(Str, [L|Ls], Pairs, LineNo) :- find(Str, L, R), linePairs(LineNo, R, LP),
     (Ls \= []   -> NewLine is LineNo+1, search(Str, Ls, NP, NewLine), Pairs = [LP | NP]
     ;Ls == []   -> Pairs = LP).
 
+searchfile(Filename, Searchstring, Locations) :- file_str("FileIn", Filename), readdevice(Old), 
+    openread(fin, "FileIn"), readdevice(fin), getlinelist(Lines), 
+    readdevice(Old), closefile(fin), 
+    search(Searchstring, Lines, Locations). 
+
+getlinelist(Lines) :- readln(l), getlinelist(ls), Lines = [l|ls].
