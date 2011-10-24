@@ -36,6 +36,7 @@ openfile(InFile, InStream) :- open(InFile, read, InStream).
 closeafile(InStream) :- close(InStream).
 
 getlinelist(Stream, Lines) :- 
-    (Stream /= end-of-file -> read(Stream, X), getlinelist(Stream, L), Lines = [X|L]
+    (Stream \= end-of-file -> read(Stream, X),
+        getlinelist(Stream, L), Lines = [X|L]
     ;Stream == end-of-file -> Lines = []).
 
