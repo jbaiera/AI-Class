@@ -28,7 +28,9 @@ search(Str, [L|Ls], Pairs, LineNo) :- find(Str, L, R), linePairs(LineNo, R, LP),
     (Ls \= []   -> NewLine is LineNo+1, search(Str, Ls, NP, NewLine), Pairs = [LP | NP]
     ;Ls == []   -> Pairs = LP).
 
-searchfile(Filename, Searchstring, Locations) :- openfile(Filename, Stream), getlinelist(Stream, Lines),
+searchfile(Filename, Searchstring, Locations) :-
+    openfile(Filename, Stream),
+    getlinelist(Stream, Lines),
     closeafile(Stream),
     search(Searchstring, Lines, Locations).
 
@@ -36,7 +38,7 @@ openfile(InFile, InStream) :- open(InFile, read, InStream).
 closeafile(InStream) :- close(InStream).
 
 getlinelist(Stream, Lines) :- stream_property(Stream, end_of_stream(End)),
-    (End == not -> read(Stream, X), print(X),
+    (End == not -> read(Stream, X),
         getlinelist(Stream, L), Lines = [X|L]
     ;End == at -> Lines = []).
 
