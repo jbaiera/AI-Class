@@ -1,4 +1,4 @@
-module Graph.Weighted (Graph, Edge, Vertex, Weight, buildFromEdges, insert) where
+module Graph.Weighted (Graph, Edge, Vertex, Weight, buildFromEdges, getNeighbors) where
 
 data Graph = Graph [(Vertex, [(Vertex, Weight)])]   deriving (Show, Read)
 data Edge = Edge Vertex Vertex Weight               deriving (Show, Read)
@@ -8,6 +8,11 @@ type Weight = Int
 
 makeGraph :: Bounds -> Graph
 makeGraph (Bounds low high) = Graph (map (\x -> (x, [])) [low..high])
+
+getNeighbors :: Graph -> Vertex -> [(Vertex, Weight)]
+getNeighbors (Graph e) v = neighbors
+    where (first, _) = e !! 0
+          (_, neighbors) = e !! (v - first)
 
 buildFromEdges :: [(Vertex, Vertex, Weight)] -> Graph
 buildFromEdges [] = Graph []
