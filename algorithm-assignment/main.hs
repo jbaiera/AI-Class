@@ -76,14 +76,14 @@ main = do
 
 
 findPath :: Graph -> Vertex -> Vertex -> [Vertex]
-findPath g from to = search g (\x->0) from to []
+findPath g from to = []
 
 --find :: Vertex -> [(Vertex, Cost, CameFrom)] -> 
 
 search :: Graph -> Heuristic -> Vertex -> Vertex -> (Map Vertex Cost) -> (Map Vertex CameFrom) -> (Set Vertex) -> [Vertex]
-search g h from to cost from fringe
-    | 
-    where fringe
+search g h from to cost cameFrom fringe
+    | otherwise = []
+    where fringe' = Set.fromList $ [ x | x <- (Set.toList fringe), Map.notMember x cost ] ++ [ x | (x,y) <- (getNeighbors graph from) ] -- expand current
 
 {-
 take current node
