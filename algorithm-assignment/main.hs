@@ -1,5 +1,8 @@
-import Graph.Weighted
+import Graph.Weighted as Graph
+import Data.Map as Map
+import Data.Set as Set
 
+cities :: [(Vertex, String, (Int, Int))]
 cities = [(1, "Augusta", (35,24))
          ,(2, "Albany", (31,22))
          ,(3, "Hartford", (34, 21))
@@ -30,6 +33,7 @@ cities = [(1, "Augusta", (35,24))
          ,(28, "Santa Fe", (13, 11))
          ]
 
+flights :: [(Vertex, Vertex, Weight)]
 flights = [(1,2,5),(1,3,3)
           ,(2,1,5),(2,3,3),(2,4,5)
           ,(3,1,3),(3,2,3),(3,5,6)
@@ -60,7 +64,10 @@ flights = [(1,2,5),(1,3,3)
           ,(28,16,8),(28,18,8),(28,22,12)
           ]
 
+graph :: Graph
 graph = buildFromEdges flights
+
+
 
 main = do
     print cities
