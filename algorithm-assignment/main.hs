@@ -2,6 +2,10 @@ import Graph.Weighted as Graph
 import Data.Map as Map
 import Data.Set as Set
 
+type Cost = Int
+type CameFrom = Vertex
+type Heuristic = (Vertex -> Cost)
+
 cities :: [(Vertex, String, (Int, Int))]
 cities = [(1, "Augusta", (35,24))
          ,(2, "Albany", (31,22))
@@ -67,10 +71,31 @@ flights = [(1,2,5),(1,3,3)
 graph :: Graph
 graph = buildFromEdges flights
 
-
-
 main = do
-    print cities
-    print flights
-    print graph
+    print $ findPath graph 24 3
+
+
+findPath :: Graph -> Vertex -> Vertex -> [Vertex]
+findPath g from to = search g (\x->0) from to []
+
+--find :: Vertex -> [(Vertex, Cost, CameFrom)] -> 
+
+search :: Graph -> Heuristic -> Vertex -> Vertex -> (Map Vertex Cost) -> (Map Vertex CameFrom) -> (Set Vertex) -> [Vertex]
+search g h from to cost from fringe
+    | 
+    where fringe
+
+{-
+take current node
+expand it, add neighbors to fringe
+for each neighbor:
+        if target node:
+            we have found it! we are done, just reconstruct the path
+            find current node in camefrom, then its predecessor in camefrom, etc. until we have a complete path
+            terminate
+        if already visited (is visited if in the cost map or the cameFrom map):
+            check if cheaper this route. if so, update the cost and cameFrom to reflect this
+        else:
+            add to cost map and cameFrom map to reflect this
+-}
 
