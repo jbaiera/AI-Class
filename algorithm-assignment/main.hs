@@ -82,8 +82,13 @@ findPath g from to = []
 
 search :: Graph -> Heuristic -> Vertex -> Vertex -> (Map Vertex Cost) -> (Map Vertex CameFrom) -> (Set Vertex) -> [Vertex]
 search g h from to cost cameFrom fringe
-    | otherwise = []
+    | from == to    = reconstructPath from to cameFrom
+    | otherwise     = []
     where fringe' = Set.fromList $ [ x | x <- (Set.toList fringe), Map.notMember x cost ] ++ [ x | (x,y) <- (getNeighbors graph from) ] -- expand current
+          
+
+reconstructPath :: Vertex -> Vertex -> (Map Vertex CameFrom) -> [Vertex]
+reconstructPath _ _ _ = []
 
 {-
 take current node
