@@ -34,7 +34,7 @@ class chart:
     creation: Mychart = chart([(node, name, x, y)],[(from,to,cost)])
     purpose: holds structure of graph, and lookup table for node data.
     members: cities, structure
-    methods: getNeighbor
+    methods: addCityObject, getNeighbor, addEdgeToStructure, grabNodeTuple
     """
     
     def __init__(self, citylist, edges):
