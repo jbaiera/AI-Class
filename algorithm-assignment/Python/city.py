@@ -85,3 +85,41 @@ class chart:
         return -1;
 
 #end class
+
+if __name__ == '__main__':
+    #TESTING TIME:
+
+    print 'Test 1: City Creation.'
+    t1_stats = (1, "London", 6, 54)
+    t1_city = city(*t1_stats)
+    if((t1_city.node == 1) and (t1_city.name == "London") 
+        and (t1_city.xpos == 6) and (t1_city.ypos == 54)):
+        print 'City Created Successfully. \nTest 1 Complete.'
+    else:
+        print 'City Creation Failed. \nTest 1 Failed.'
+        exit()
+
+    print 'Test 2: Chart Creation - No Cities.'
+    t2_citylist = []
+    t2_edges = []
+    t2_chart = chart(t2_citylist, t2_edges)
+    print 'Chart Created Successfully. \nTest 2 Complete.'
+
+    print 'Test 3: Add City to chart.'
+    t3_chart = t2_chart
+    t3_newcity = t1_city
+    t3_chart.addCityObject(t3_newcity)
+    if(t3_chart.cities[0].name == "London"):
+        print 'City Successfully Appended. \nTest 3 Complete.'
+    else:
+        print 'City Addition Failed. \nTest 3 Failed.'
+        exit()
+
+    #test grab Node Tuple for not finding something
+    #test add edge to structure
+    #test grab node again on the new node
+    #add another edge to the new node
+    #build a basic chart from init
+    #test on complex chart
+
+
