@@ -33,20 +33,48 @@ class chart:
     """chart:
     creation: Mychart = chart([(node, name, x, y)],[(from,to,cost)])
     purpose: holds structure of graph, and lookup table for node data.
-    members: cities, _structure
+    members: cities, structure
     methods: getNeighbor
     """
     
     def __init__(self, citylist, edges):
         """___init___ :: [(node, name, x, y)] -> [(from, to, cost)] -> object"""
-        #First, parse the lookup, then the structure
-        pass
+        #Initialize, parse the lookup, then the structure
+        self.structure = []
+        self.cities = []
+
         #Parse the cities into a lookup.
+        if (len(citylist) != 0):
+            for eachTuple in citylist:
+                #YEAH TUPLE UNPACKING! (I finally used it...)
+                newCity = city(*eachTuple)
+                self.addCityObject(newCity)
 
         #Parse the edges into a graph structure.
+        if (len(edges) != 0):
+            for eachEdge in edges:
+                #lets do it again!
+                self.addEdgeToStructure(*eachEdge)
     
     def addCityObject(self, aNewCity):
         """addCityObject :: city -> nothing"""
         self.cities = append(aNewCity)
+
+    def addEdgeToStructure(self, fromNode, toNode, cost):
+        """addEdgeToStructure :: from -> to -> cost -> nothing"""
+        #search for the index of the node that we start at.
+    
+    def grabNodeTuple(self, targetNode=0)
+        """grabNodeTuple :: target node(0) -> index in structure(-1 on error)"""
+        targetIdx = 0
+        for eachTuple in self.structure:
+            if eachTuple[0] == targetNode:
+                #found what we're looking for
+                return targetIdx
+            else:
+                #increment and keep searching
+                targetIdx = targetIdx + 1
+        #at this point we will have not found it.
+        return -1;
 
 #end class
