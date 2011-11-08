@@ -16,7 +16,9 @@
 class city:
     """city:
     creation: Mycity = city(node, name, xpos, ypos)
-    members: node, name, xpos, ypos"""
+    purpose: container for city information. Used for lookups.
+    members: node, name, xpos, ypos
+    """
 
     def __init__(self, number=(-1), name='', x=0, y=0):
         """__init__ :: number(-1) -> name('') -> x(0) -> y(0) -> city"""
@@ -24,8 +26,27 @@ class city:
         self.name = name
         self.xpos = x
         self.ypos = y
-    #end def
 
 #end class
 
+class chart:
+    """chart:
+    creation: Mychart = chart([(node, name, x, y)],[(from,to,cost)])
+    purpose: holds structure of graph, and lookup table for node data.
+    members: cities, _structure
+    methods: getNeighbor
+    """
+    
+    def __init__(self, citylist, edges):
+        """___init___ :: [(node, name, x, y)] -> [(from, to, cost)] -> object"""
+        #First, parse the lookup, then the structure
+        pass
+        #Parse the cities into a lookup.
 
+        #Parse the edges into a graph structure.
+    
+    def addCityObject(self, aNewCity):
+        """addCityObject :: city -> nothing"""
+        self.cities = append(aNewCity)
+
+#end class
