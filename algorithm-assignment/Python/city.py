@@ -62,7 +62,14 @@ class chart:
 
     def addEdgeToStructure(self, fromNode, toNode, cost):
         """addEdgeToStructure :: from -> to -> cost -> nothing"""
-        #search for the index of the node that we start at.
+        #search for the index for the node that we start at.
+        structIdx = self.grabNodeTuple(fromNode)
+        if(structIdx != (-1)): #if we found it,
+            newFlight = (toNode, cost)
+            self.structure[structIdx][1].append(newFlight)
+        else: #if the from node doesn't exist
+            newStructureData = (fromNode, [(toNode, cost)])
+            self.structure.append(newStructureData)
     
     def grabNodeTuple(self, targetNode=0)
         """grabNodeTuple :: target node(0) -> index in structure(-1 on error)"""
