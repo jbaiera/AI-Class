@@ -38,7 +38,7 @@ class chart:
     """
     
     def __init__(self, citylist, edges):
-        """___init___ :: [(node, name, x, y)] -> [(from, to, cost)] -> object"""
+        """__init__ :: [(node, name, x, y)] -> [(from, to, cost)] -> object"""
         #Initialize, parse the lookup, then the structure
         self.structure = []
         self.cities = []
@@ -56,6 +56,14 @@ class chart:
                 #lets do it again!
                 self.addEdgeToStructure(*eachEdge)
     
+    def getNeighbors(self, parentNode=0):
+        """getNeighbors :: parentNode(0) -> [(node,cost)]"""
+        idx = self.grabNodeTuple(parentNode)
+        if idx == -1:
+            return [] #no neighbors if there is no node
+        else:
+            return self.structure[idx][1] #second item (a list) in a node
+
     def addCityObject(self, aNewCity):
         """addCityObject :: city -> nothing"""
         self.cities.append(aNewCity)
@@ -94,7 +102,7 @@ if __name__ == '__main__':
     t1_city = city(*t1_stats)
     if((t1_city.node == 1) and (t1_city.name == "London") 
         and (t1_city.xpos == 6) and (t1_city.ypos == 54)):
-        print 'City Created Successfully. \nTest 1 Complete.'
+        print 'City Created Successfully.'
     else:
         print 'City Creation Failed. \nTest 1 Failed.'
         exit()
@@ -103,14 +111,14 @@ if __name__ == '__main__':
     t2_citylist = []
     t2_edges = []
     t2_chart = chart(t2_citylist, t2_edges)
-    print 'Chart Created Successfully. \nTest 2 Complete.'
+    print 'Chart Created Successfully.'
 
     print 'Test 3: Add City to chart.'
     t3_chart = t2_chart
     t3_newcity = t1_city
     t3_chart.addCityObject(t3_newcity)
     if(t3_chart.cities[0].name == "London"):
-        print 'City Successfully Appended. \nTest 3 Complete.'
+        print 'City Successfully Appended. '
     else:
         print 'City Addition Failed. \nTest 3 Failed.'
         exit()
@@ -119,7 +127,7 @@ if __name__ == '__main__':
     t4_chart = t3_chart
     t4_index = t4_chart.grabNodeTuple(3)
     if(t4_index == -1):
-        print 'Node Not Found - As Expected. \nTest 4 Complete.'
+        print 'Node Not Found - As Expected. '
     else:
         print 'Incorrect Exit Status. \nTest 4 Failed.'
         exit()
@@ -129,7 +137,7 @@ if __name__ == '__main__':
     t5_edgestat = (1,2,5) #from one to two, cost of five
     t5_chart.addEdgeToStructure(*t5_edgestat)
     if (t5_chart.structure == [(1,[(2,5)])]):
-        print 'Node and Edge Added Successfully. \nTest 5 Complete.'
+        print 'Node and Edge Added Successfully. '
     else:
         print 'Problem occured. Structure : ' , t5_chart.structure
         print 'Test 5 Failed.'
@@ -139,7 +147,7 @@ if __name__ == '__main__':
     t6_chart = t5_chart
     t6_idx = t6_chart.grabNodeTuple(1)
     if(t6_chart.structure[t6_idx] == (1,[(2,5)])):
-       print 'Found Existing Node. \nTest 6 Complete.'
+       print 'Found Existing Node. '
     else:
         print 'Problem occured. Index : ' , t6_idx
         exit()
@@ -149,13 +157,12 @@ if __name__ == '__main__':
     t7_edgestat = (1, 3, 7) #from 1 to 3, cost 7
     t7_chart.addEdgeToStructure(*t7_edgestat)
     if(t7_chart.structure == [(1,[(2,5),(3,7)])]):
-        print 'Edge Added Successfully. \nTest 7 Complete.'
+        print 'Edge Added Successfully. '
     else:
         print 'Problem Occured. Structure : ' , t7_chart.structure
         print 'Test 7 Failed.'
         exit()
     
-    #test on complex chart
     print 'Test 8: Create Complex Chart.'
     t8_citylist = [(1,'Downtown',0,0),(2,'Midtown',1,2),(3,'Uptown',4,5)]
     t8_edgelist = [(1,2,4),(2,1,4),(2,3,3),(3,2,3)]
@@ -169,10 +176,20 @@ if __name__ == '__main__':
         else:
             t8_idx = t8_idx + 1
     if(t8_chart.structure == [(1,[(2,4)]),(2,[(1,4),(3,3)]),(3,[(2,3)])]):
-        print 'Structure and Cities created successfully. \nTest 8 Complete.'
+        print 'Structure and Cities created successfully. '
     else:
         print 'Structure Incorrect : ' , t8_chart.structure
         print 'Test 8 Failed.'
+        exit()
+
+    print 'Test 9: Pulling Neighbors.'
+    t9_chart = t8_chart
+    t9_neighbors = t9_chart.getNeighbors(2)
+    if(t9_neighbors == [(1,4),(3,3)]):
+        print 'Neighbors found. '
+    else:
+        print 'Incorrect Neighbors : ' , t9_neighbors
+        print 'Test 9 Failed.'
         exit()
 
     print 'Testing Finished.'
