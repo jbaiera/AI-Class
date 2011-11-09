@@ -58,7 +58,7 @@ class chart:
     
     def addCityObject(self, aNewCity):
         """addCityObject :: city -> nothing"""
-        self.cities = append(aNewCity)
+        self.cities.append(aNewCity)
 
     def addEdgeToStructure(self, fromNode, toNode, cost):
         """addEdgeToStructure :: from -> to -> cost -> nothing"""
@@ -71,7 +71,7 @@ class chart:
             newStructureData = (fromNode, [(toNode, cost)])
             self.structure.append(newStructureData)
     
-    def grabNodeTuple(self, targetNode=0)
+    def grabNodeTuple(self, targetNode=0):
         """grabNodeTuple :: target node(0) -> index in structure(-1 on error)"""
         targetIdx = 0
         for eachTuple in self.structure:
@@ -115,11 +115,66 @@ if __name__ == '__main__':
         print 'City Addition Failed. \nTest 3 Failed.'
         exit()
 
-    #test grab Node Tuple for not finding something
-    #test add edge to structure
-    #test grab node again on the new node
-    #add another edge to the new node
-    #build a basic chart from init
+    print 'Test 4: Grab Node Tuple Index - Empty Structure.'
+    t4_chart = t3_chart
+    t4_index = t4_chart.grabNodeTuple(3)
+    if(t4_index == -1):
+        print 'Node Not Found - As Expected. \nTest 4 Complete.'
+    else:
+        print 'Incorrect Exit Status. \nTest 4 Failed.'
+        exit()
+    
+    print 'Test 5: Add Edge To Structure.'
+    t5_chart = t4_chart
+    t5_edgestat = (1,2,5) #from one to two, cost of five
+    t5_chart.addEdgeToStructure(*t5_edgestat)
+    if (t5_chart.structure == [(1,[(2,5)])]):
+        print 'Node and Edge Added Successfully. \nTest 5 Complete.'
+    else:
+        print 'Problem occured. Structure : ' , t5_chart.structure
+        print 'Test 5 Failed.'
+        exit()
+    
+    print 'Test 6: Grab Existing Node Index.'
+    t6_chart = t5_chart
+    t6_idx = t6_chart.grabNodeTuple(1)
+    if(t6_chart.structure[t6_idx] == (1,[(2,5)])):
+       print 'Found Existing Node. \nTest 6 Complete.'
+    else:
+        print 'Problem occured. Index : ' , t6_idx
+        exit()
+
+    print 'Test 7: Add Another Edge.'
+    t7_chart = t6_chart
+    t7_edgestat = (1, 3, 7) #from 1 to 3, cost 7
+    t7_chart.addEdgeToStructure(*t7_edgestat)
+    if(t7_chart.structure == [(1,[(2,5),(3,7)])]):
+        print 'Edge Added Successfully. \nTest 7 Complete.'
+    else:
+        print 'Problem Occured. Structure : ' , t7_chart.structure
+        print 'Test 7 Failed.'
+        exit()
+    
     #test on complex chart
+    print 'Test 8: Create Complex Chart.'
+    t8_citylist = [(1,'Downtown',0,0),(2,'Midtown',1,2),(3,'Uptown',4,5)]
+    t8_edgelist = [(1,2,4),(2,1,4),(2,3,3),(3,2,3)]
+    t8_chart = chart(t8_citylist, t8_edgelist)
+    t8_idx = 0
+    for eachcity in t8_citylist:
+        current = t8_chart.cities[t8_idx]
+        if current.name != eachcity[1]:
+            print 'Cities Created Incorrectly \nTest 8 Failed.'
+            exit()
+        else:
+            t8_idx = t8_idx + 1
+    if(t8_chart.structure == [(1,[(2,4)]),(2,[(1,4),(3,3)]),(3,[(2,3)])]):
+        print 'Structure and Cities created successfully. \nTest 8 Complete.'
+    else:
+        print 'Structure Incorrect : ' , t8_chart.structure
+        print 'Test 8 Failed.'
+        exit()
+
+    print 'Testing Finished.'
 
 
