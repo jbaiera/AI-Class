@@ -34,7 +34,7 @@ class chart:
     creation: Mychart = chart([(node, name, x, y)],[(from,to,cost)])
     purpose: holds structure of graph, and lookup table for node data.
     members: cities, structure
-    methods: addCityObject, getNeighbor, addEdgeToStructure, grabNodeTuple
+    methods: addCityObject, getNeighbor, addEdgeToStructure, grabNodeTuple, lookupCity
     """
     
     def __init__(self, citylist, edges):
@@ -63,6 +63,16 @@ class chart:
             return [] #no neighbors if there is no node
         else:
             return self.structure[idx][1] #second item (a list) in a node
+
+    def lookupCity(self, nodenumber=0):
+        """lookupCity :: nodenumber(0) -> indexofcity"""
+        counter = 0
+        for eachCity in self.cities:
+            if eachCity.node == nodenumber:
+                return counter
+            else:
+                counter = counter + 1
+        return -1
 
     def addCityObject(self, aNewCity):
         """addCityObject :: city -> nothing"""
@@ -190,6 +200,17 @@ if __name__ == '__main__':
     else:
         print 'Incorrect Neighbors : ' , t9_neighbors
         print 'Test 9 Failed.'
+        exit()
+    
+    print 'Test 10: City Lookup.'
+    t10_chart = t9_chart
+    t10_city = t8_citylist[0]
+    t10_idx = t10_chart.lookupCity(1)
+    if(t10_chart.cities[t10_idx].node == 1):
+        print 'City Found.'
+    else:
+        print 'City not found.' , t10_idx
+        print 'Test 10 Failed!'
         exit()
 
     print 'Testing Finished.'
