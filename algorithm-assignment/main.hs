@@ -78,17 +78,19 @@ main = do
 findPath :: Graph -> Vertex -> Vertex -> [Vertex]
 findPath g from to = []
 
---find :: Vertex -> [(Vertex, Cost, CameFrom)] -> 
-
-search :: Graph -> Heuristic -> Vertex -> Vertex -> (Map Vertex Cost) -> (Map Vertex CameFrom) -> (Set Vertex) -> [Vertex]
-search g h from to cost cameFrom fringe
+search :: Graph -> Heuristic -> Vertex -> Vertex -> Vertex -> Cost -> (Map Vertex Cost) -> (Map Vertex CameFrom) -> (Set Vertex) -> [Vertex]
+search g h current from to distance cost cameFrom fringe
     | from == to    = reconstructPath from to cameFrom
     | otherwise     = []
-    where -- fringe' = Set.fromList $ [ x | x <- (Set.toList fringe), Map.notMember x cost ] ++ [ x | (x,y) <- (getNeighbors graph from) ] -- expand current
-          fringe'   = [] -- all nodes in the fringe except the current one, and add the neighbors which do not already have costs
-          cost'     = [] -- all the nodes in the cost map remain in it, add the neighbors which are not in the cost map or which have a lower cost (update)
-          cameFrom' = [] -- set the next node we go to to be coming from the current one. Replace it if it's coming from somewhere else, we're on a better path
-          next      = 0  -- the node in the fringe with the lowest cost
+    where fringe'   = Set.fromList $ [ x | x <- (Set.toList fringe), x /= from ] ++ [ x | (x,c) <- (getNeighbors g from), Map.notMember x cost ]
+          -- add the nodes to the fringe which haven't already been evaluated for costs, and remove the current node from the fringe
+          -- all nodes in the fringe except the current one, and add the neighbors which do not already have costs
+          cost'     = Map.fromList $ [ (x,c) | (x,y) <- (Map.toList cost), let c = min y (distance + h current) ]
+          -- all the nodes in the cost map remain in it, add the neighbors which are not in the cost map or which have a lower cost (update)
+          cameFrom' = Map.fromList $ [ (x,p) | (x,y) <- (Map.toList cameFrom), let p = if y <= (distance + h current) then y else current ]
+          -- set the next node we go to to be coming from the current one. Replace it if it's coming from somewhere else, we're on a better path
+          next      = 0
+          -- the node in the fringe with the lowest cost
 
 reconstructPath :: Vertex -> Vertex -> (Map Vertex CameFrom) -> [Vertex]
 reconstructPath _ _ _ = []
