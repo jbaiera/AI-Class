@@ -76,7 +76,7 @@ graph :: Graph
 graph = buildFromEdges flights
 
 main = do
-    print $ findPath graph 24 3
+    print $ findPath graph 1 21
 
 euclideanDistance :: (Int, Int) -> (Int, Int) -> Cost
 euclideanDistance (x1, y1) (x2, y2) = floor . sqrt . fromIntegral $ (x1-x2)^2 + (y1-y2)^2
@@ -84,20 +84,21 @@ euclideanDistance (x1, y1) (x2, y2) = floor . sqrt . fromIntegral $ (x1-x2)^2 + 
 findPath :: Graph -> Vertex -> Vertex -> [Vertex]
 findPath g from to = search g h from from to 0 cost cameFrom fringe
     where h n = euclideanDistance (coordinates to) (coordinates n)
-          cost = Map.fromList [(from, 0)]
+          cost = Map.fromList [(from, h from)]
           cameFrom = Map.fromList []
           fringe = Set.fromList [from]
 
 search :: Graph -> Heuristic -> Vertex -> Vertex -> Vertex -> Cost -> (Map Vertex Cost) -> (Map Vertex CameFrom) -> (Set Vertex) -> [Vertex]
 search g h current from to distance cost cameFrom fringe
-    | from == to    = reconstructPath from to cameFrom
+    | current == to = reconstructPath from to cameFrom
     | otherwise     = search g h next from to distance' cost' cameFrom' fringe'
-    where fringe'   = Set.fromList $ [ x | x <- (Set.toList fringe), x /= from ] ++ [ x | (x,c) <- (getNeighbors g from), Map.notMember x cost ]
-          -- add the nodes to the fringe which haven't already been evaluated for costs, and remove the current node from the fringe
+    where fringe'   = Set.fromList $ [ x | x <- (Set.toList fringe), x /= current ] ++ [ x | (x,c) <- (getNeighbors g current), Map.notMember x cost ]
           -- all nodes in the fringe except the current one, and add the neighbors which do not already have costs
-          cost'     = Map.fromList $ [ (x,c) | (x,y) <- (Map.toList cost), let c = min y (distance + h current) ]
+          cost'     = Map.fromList $ [ (x,c) | (x,y) <- (Map.toList cost), let c = min y (distance + h current) ] ++
+                                     [ (x,c) | x <- (Set.toList fringe'), Map.notMember x cost, let c = distance + h x ]
           -- all the nodes in the cost map remain in it, add the neighbors which are not in the cost map or which have a lower cost (update)
-          cameFrom' = Map.fromList $ [ (x,p) | (x,y) <- (Map.toList cameFrom), let p = if y <= (distance + h current) then y else current ]
+          cameFrom' = Map.fromList $ [ (x,p) | (x,y) <- (Map.toList cameFrom), let p = if ((Map.lookup y cost) <= Just (distance + h current)) then y else current ] ++
+                                     [ (x,current) | x <- (Set.toList fringe'), Map.notMember x cameFrom ]
           -- set the next node we go to to be coming from the current one. Replace it if it's coming from somewhere else, we're on a better path
           next      = cheapest fringe' cost'
           -- the node in the fringe with the lowest cost
@@ -110,23 +111,12 @@ search g h current from to distance cost cameFrom fringe
                   remaining = tail fringeList
 
 reconstructPath :: Vertex -> Vertex -> (Map Vertex CameFrom) -> [Vertex]
-reconstructPath _ _ _ = []
+reconstructPath from to cameFrom = case (Map.lookup to cameFrom) of
+    Nothing -> []
+    Just prior -> to : reconstructPath from prior cameFrom
+--reconstructPath _ _ _ = []
 
 addMaybe :: Int -> Maybe Int -> Int
 addMaybe x (Just y) = x + y
 addMaybe x (Nothing) = x
-
-{-
-take current node
-expand it, add neighbors to fringe
-for each neighbor:
-        if target node:
-            we have found it! we are done, just reconstruct the path
-            find current node in camefrom, then its predecessor in camefrom, etc. until we have a complete path
-            terminate
-        if already visited (is visited if in the cost map or the cameFrom map):
-            check if cheaper this route. if so, update the cost and cameFrom to reflect this
-        else:
-            add to cost map and cameFrom map to reflect this
--}
 
