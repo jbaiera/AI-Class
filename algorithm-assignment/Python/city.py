@@ -34,7 +34,7 @@ class chart:
     creation: Mychart = chart([(node, name, x, y)],[(from,to,cost)])
     purpose: holds structure of graph, and lookup table for node data.
     members: cities, structure
-    methods: addCityObject, getNeighbor, addEdgeToStructure, grabNodeTuple
+    methods: addCityObject, getNeighbors, addEdgeToStructure, grabNodeTuple, lookupCity
     """
     
     def __init__(self, citylist, edges):
@@ -64,6 +64,16 @@ class chart:
         else:
             return self.structure[idx][1] #second item (a list) in a node
 
+    def lookupCity(self, nodenumber=0):
+        """lookupCity :: nodenumber(0) -> indexofcity"""
+        counter = 0
+        for eachCity in self.cities:
+            if eachCity.node == nodenumber:
+                return counter
+            else:
+                counter = counter + 1
+        return -1
+
     def addCityObject(self, aNewCity):
         """addCityObject :: city -> nothing"""
         self.cities.append(aNewCity)
@@ -78,7 +88,12 @@ class chart:
         else: #if the from node doesn't exist
             newStructureData = (fromNode, [(toNode, cost)])
             self.structure.append(newStructureData)
-    
+        #now, lets make sure that the node we're travelling to exists.
+        if(self.grabNodeTuple(toNode) == (-1)): #if the toNode doesn't exist
+            #then add one
+            moreStructureData = (toNode, [])
+            self.structure.append(moreStructureData)
+
     def grabNodeTuple(self, targetNode=0):
         """grabNodeTuple :: target node(0) -> index in structure(-1 on error)"""
         targetIdx = 0
@@ -136,7 +151,7 @@ if __name__ == '__main__':
     t5_chart = t4_chart
     t5_edgestat = (1,2,5) #from one to two, cost of five
     t5_chart.addEdgeToStructure(*t5_edgestat)
-    if (t5_chart.structure == [(1,[(2,5)])]):
+    if (t5_chart.structure == [(1,[(2,5)]),(2,[])]):
         print 'Node and Edge Added Successfully. '
     else:
         print 'Problem occured. Structure : ' , t5_chart.structure
@@ -156,7 +171,7 @@ if __name__ == '__main__':
     t7_chart = t6_chart
     t7_edgestat = (1, 3, 7) #from 1 to 3, cost 7
     t7_chart.addEdgeToStructure(*t7_edgestat)
-    if(t7_chart.structure == [(1,[(2,5),(3,7)])]):
+    if(t7_chart.structure == [(1,[(2,5),(3,7)]),(2,[]),(3,[])]):
         print 'Edge Added Successfully. '
     else:
         print 'Problem Occured. Structure : ' , t7_chart.structure
@@ -190,6 +205,17 @@ if __name__ == '__main__':
     else:
         print 'Incorrect Neighbors : ' , t9_neighbors
         print 'Test 9 Failed.'
+        exit()
+    
+    print 'Test 10: City Lookup.'
+    t10_chart = t9_chart
+    t10_city = t8_citylist[0]
+    t10_idx = t10_chart.lookupCity(1)
+    if(t10_chart.cities[t10_idx].node == 1):
+        print 'City Found.'
+    else:
+        print 'City not found.' , t10_idx
+        print 'Test 10 Failed!'
         exit()
 
     print 'Testing Finished.'
