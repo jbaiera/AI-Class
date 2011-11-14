@@ -14,6 +14,16 @@ type Position = (Int, Int)
 
 data Board = Board [[Player]] deriving (Show, Read, Eq)
 
+initialBoard :: Board
+initialBoard = Board [[0,0,0,0,0,0,0,0],
+                      [0,0,0,0,0,0,0,0],
+                      [0,0,0,0,0,0,0,0],
+                      [0,0,0,1,2,0,0,0],
+                      [0,0,0,2,1,0,0,0],
+                      [0,0,0,0,0,0,0,0],
+                      [0,0,0,0,0,0,0,0],
+                      [0,0,0,0,0,0,0,0]]
+
 --play :: Board -> Player -> Position -> Board
 play board player position = board'
     where directions = [ (a,b) | a <- [(-1),0,1], b <- [(-1),0,1],
