@@ -1,5 +1,6 @@
 import Reversi.Game
 
 main = do
-    print "hi"
+    print initialBoard
+    print $ play initialBoard 1 (2,3)
 
