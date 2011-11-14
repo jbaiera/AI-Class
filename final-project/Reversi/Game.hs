@@ -37,7 +37,6 @@ valid board@(Board grid) player position@(px, py) direction@(dx, dy)
     | outOfBounds (px + dx, py + dy)               = False
     | grid !! (px + dx) !! (py + dy) == player     = True
     | otherwise                                    = valid board player (px+dx,py+dy) direction
--- This is obviously the wrong behavior but it is here as a placeholder, to compile.
 
 -- capture will flip all the tiles in one direction
 capture :: Board -> Player -> Position -> Direction -> Board
