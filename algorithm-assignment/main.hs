@@ -93,9 +93,11 @@ main = do
     print graph
     print $ getNeighbors graph 22
 
+-- Our heuristic function is the euclidean distance betwee nodes
 euclideanDistance :: (Int, Int) -> (Int, Int) -> Cost
 euclideanDistance (x1, y1) (x2, y2) = floor . sqrt . fromIntegral $ (x1-x2)^2 + (y1-y2)^2
 
+-- This function wraps the search algorithm so we only have to supply the graph, to, and from nodes.
 findPath :: Graph -> Vertex -> Vertex -> [Vertex]
 findPath g from to = search g h from from to 0 cost cameFrom fringe
     where h n = euclideanDistance (coordinates to) (coordinates n)
@@ -103,42 +105,45 @@ findPath g from to = search g h from from to 0 cost cameFrom fringe
           cameFrom = Map.fromList []
           fringe = Set.fromList [from]
 
+-- We preform a lookup in a map and unbox the result automatically
 mLookup :: Vertex -> (Map Vertex Int) -> Int
 mLookup n m = case (Map.lookup n m) of
     Nothing -> 0
     Just a  -> a
 
+-- search performs A* search to find the path from one node to another in a weighted graph.
 search :: Graph -> Heuristic -> Vertex -> Vertex -> Vertex -> Cost -> (Map Vertex Cost) -> (Map Vertex CameFrom) -> (Set Vertex) -> [Vertex]
 search g h current from to distance cost cameFrom fringe
     | current == to = reconstructPath from to cameFrom
     | otherwise     = search g h next from to distance' cost' cameFrom' fringe'
     where neighbors = [ x | (x,c) <- getNeighbors g current ]
-          --
+          -- this is the list of all neighbors of the current node
           withCost = [ x | x <- neighbors, Map.member x cost ]
-          --
+          -- ... which we filter to get those in the cost map
           withoutCost = [ x | x <- neighbors, Map.notMember x cost ]
-          --
+          -- ... and filter again to get those not in the cost map
           fringe' = Set.fromList $ [ x | x <- (Set.toList fringe ++ withoutCost), x /= current ]
-          --
+          -- The new fringe is the old fringe, minus the current node, plus any neighbors which have not been evaluated yet
           cost' = Map.fromList $ [ (x,c)  | (x,c) <- Map.toList cost, not $ elem x neighbors ]
                               ++ [ (x,c)  | x <- withoutCost, let c = distance + getWeight current x ]
                               ++ [ (x,c') | (x,c) <- Map.toList cost, elem x withCost,
                                             let c' = min c (distance + getWeight current x) ]
-          --
+          -- We add costs for all new neighbors, update costs for neighbors which are cheaper, and keep non-neighbors the same
           cameFrom' = Map.fromList $ [ (x,p)        | (x,p) <- Map.toList cameFrom, not $ elem x neighbors ]
                                   ++ [ (x,current)  | x <- withoutCost ]
                                   ++ [ (x,p')       | (x,p) <- Map.toList cameFrom, elem x withCost,
                                                       let p' = if Map.lookup x cost == Map.lookup x cost' then p else current ]
-          --
+          -- We add predecessors for new neighbors, update those for cheaper paths, and keep non-neighbors the same
           fringeList = Set.toList fringe'
-          --
+          -- This is a conversion of the fringe to a list for convenience.
           next = foldr (\x y -> if hCost x < hCost y then x else y) (head fringeList) (tail fringeList)
-          --
+          -- We pick the cheapest cost node, minimizing cost to reach the node plus the heuristic estimate of time remaining.
           hCost n = h n + mLookup n cost'
-          --
+          -- The heuristic cost is just the current cost of the node plus the heuristic function of the node.
           distance' = mLookup next cost'
+          -- The new distance traveled is how long it takes to reach the next node we're evaluating.
 
--- this gives the path in reverse order
+-- this reconstructs the path from a cameFrom map.
 reconstructPath :: Vertex -> Vertex -> (Map Vertex CameFrom) -> [Vertex]
 reconstructPath f t m = f : (reverse $ reconstruct' f t m)
     where reconstruct' from to cameFrom = case (Map.lookup to cameFrom) of
