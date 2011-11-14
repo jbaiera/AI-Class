@@ -15,14 +15,18 @@ type Position = (Int, Int)
 data Board = Board [[Player]] deriving (Show, Read, Eq)
 
 --play :: Board -> Player -> Position -> Board
---play board player position = board'
---    where directions = [ (a,b) | a <- [(-1),0,1], b <- [(-1),0,1],
---                         flippable board player position (a,b) ]
---          board' = something
+play board player position = board'
+    where directions = [ (a,b) | a <- [(-1),0,1], b <- [(-1),0,1],
+                                 valid board player position (a,b) ]
+          board' = foldr (\d b -> capture b player position d) board directions
 
--- flippable determines whether or not we should flip tiles in that direction
---flippable :: Board -> Player -> Position -> Direction -> Bool
+-- valid determines whether or not we should flip tiles in that direction
+valid :: Board -> Player -> Position -> Direction -> Bool
+valid _ _ _ _ = False -- FIXME
+-- This is obviously the wrong behavior but it is here as a placeholder, to compile.
 
--- flip will flip all the tiles in one direction
---flip :: Board -> Player -> Position -> Direction -> Board
+-- capture will flip all the tiles in one direction
+capture :: Board -> Player -> Position -> Direction -> Board
+capture board _ _ _ = board
+-- This is obviously the wrong behavior but it is here as a placeholder, to compile.
 
