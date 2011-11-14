@@ -33,11 +33,18 @@ play board player position = board'
 
 -- valid determines whether or not we should flip tiles in that direction
 valid :: Board -> Player -> Position -> Direction -> Bool
-valid _ _ _ _ = False -- FIXME
+valid board@(Board grid) player position@(px, py) direction@(dx, dy)
+    | outOfBounds (px + dx, py + dy)               = False
+    | grid !! (px + dx) !! (py + dy) == player     = True
+    | otherwise                                    = valid board player (px+dx,py+dy) direction
 -- This is obviously the wrong behavior but it is here as a placeholder, to compile.
 
 -- capture will flip all the tiles in one direction
 capture :: Board -> Player -> Position -> Direction -> Board
 capture board _ _ _ = board
 -- This is obviously the wrong behavior but it is here as a placeholder, to compile.
+
+-- outOfBounds checks if a position is a valid board position
+outOfBounds :: Position -> Bool
+outOfBounds (x, y) = 0 <= x && x < 8 && 0 <= y && y < 8
 
