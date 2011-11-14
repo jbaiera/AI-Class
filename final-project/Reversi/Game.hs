@@ -14,6 +14,7 @@ type Position = (Int, Int)
 
 data Board = Board [[Player]] deriving (Show, Read, Eq)
 
+-- the default starting position
 initialBoard :: Board
 initialBoard = Board [[0,0,0,0,0,0,0,0],
                       [0,0,0,0,0,0,0,0],
