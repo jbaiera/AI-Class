@@ -145,7 +145,4 @@ reconstructPath f t m = f : (reverse $ reconstruct' f t m)
               Nothing -> []
               Just prior -> to : reconstruct' from prior cameFrom
 
-addMaybe :: Int -> Maybe Int -> Int
-addMaybe x (Just y) = x + y
-addMaybe x (Nothing) = x
 
