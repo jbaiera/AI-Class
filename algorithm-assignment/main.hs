@@ -137,23 +137,13 @@ search g h current from to distance cost cameFrom fringe
           hCost n = h n + mLookup n cost'
           --
           distance' = mLookup next cost'
-          
-          -- the cost map stores the cost to reach a node, does not include anything from the heuristic
-          {-
-          new cost map:     any old nodes which are not neighbors stay the same cost
-                            add:     any nodes new to the fringe, which did not have a cost
-                            update:  any nodes in the fringe, which already had a cost
-          new camefrom map: any old nodes which are not neighbors stay the same cost
-                            add:     any nodes new to the fringe, which did not have a cost / were not in camefrom
-                            update:  any nodes in the fringe, which already had a cost / already were in camefrom
-          next:             the node in the fringe with the lowest value for (cost + heuristic function)
-          -}
 
 -- this gives the path in reverse order
 reconstructPath :: Vertex -> Vertex -> (Map Vertex CameFrom) -> [Vertex]
-reconstructPath from to cameFrom = case (Map.lookup to cameFrom) of
-    Nothing -> []
-    Just prior -> to : reconstructPath from prior cameFrom
+reconstructPath f t m = f : (reverse $ reconstruct' f t m)
+    where reconstruct' from to cameFrom = case (Map.lookup to cameFrom) of
+              Nothing -> []
+              Just prior -> to : reconstruct' from prior cameFrom
 
 addMaybe :: Int -> Maybe Int -> Int
 addMaybe x (Just y) = x + y
