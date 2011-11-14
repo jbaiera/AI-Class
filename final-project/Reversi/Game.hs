@@ -40,8 +40,11 @@ valid board@(Board grid) player position@(px, py) direction@(dx, dy)
 
 -- capture will flip all the tiles in one direction
 capture :: Board -> Player -> Position -> Direction -> Board
-capture board _ _ _ = board
--- This is obviously the wrong behavior but it is here as a placeholder, to compile.
+capture board@(Board grid) player position@(px, py) direction@(dx, dy)
+    | outOfBounds (px + dx, py + dy) = board
+    | grid !! (px + dx) !! (py + dy) == player = board
+    | otherwise = capture (Board grid') player (px + dx, py + dy) direction
+    where grid' = grid -- FIXME: update the current position to the correct player
 
 -- outOfBounds checks if a position is a valid board position
 outOfBounds :: Position -> Bool
