@@ -28,6 +28,9 @@
 import city
 import math
 
+#module constants
+nonExistentPath = [-1] #constant denoting a non existant path
+
 def getEuclideanDistance(s=(0,0), g=(0,0)):
     """getEuclideanDistance :: (num, num) -> (num, num) -> num"""
     x1, y1 = s
@@ -45,6 +48,36 @@ def reconstructPath(prev={} , current=0):
         return path
     else:
         return [current]
+
+def heuristic(current=0, goal=0, space=city.chart([],[])):
+    """heuristic :: nodenumber -> nodenumber -> chart -> distance"""
+    startIdx = space.lookupCity(current)
+    goalIdx = space.lookupCity(goal)
+    if (startIdx == city.cityNotFound) or (goalIdx == city.cityNotFound):
+        return 0 #there is no distance between cities that don't exist
+        #this should make it like djikstra's algorithm if the goal does not exist
+    else:
+        sCity = space.cities[startIdx]
+        gCity= space.cities[goalIdx]
+        #return the Euclidean Distance of the two cities.
+        return getEuclideanDistance((sCity.xpos,sCity.ypos),(gCity.xpos,gCity.ypos))
+
+def Astar(start=0, goal=0, space=city.chart([],[]))
+    """Astar :: nodenumber -> nodenumber -> chart -> [nodenumbers]"""
+    #a few checks at the start
+    if (space.lookupCity(start) == city.cityNotFound) or (space.lookupCity(goal) == city.cityNotFound):
+        #start or goal does not exist. Do not search!
+        return [-1]
+    #Set up some preliminary lists
+    openSet = [start] #add the starting node to the open set
+    closedSet = [] #no nodes visited yet
+    pathSet = {} #this will hold each node's predecessor
+
+    #keep track of the heuristic scores for all nodes
+    gScore = {}
+    hScore = {}
+    fScore = {}
+
 
 if __name__ == "__main__":
     #unit testing

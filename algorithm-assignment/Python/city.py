@@ -13,6 +13,9 @@
 #   we will build a heuristic to traverse the graph.                           #
 ################################################################################
 
+#module constants
+cityNotFound = -1
+
 class city:
     """city:
     creation: Mycity = city(node, name, xpos, ypos)
