@@ -35,8 +35,8 @@ def getEuclideanDistance(s=(0,0), g=(0,0)):
     """getEuclideanDistance :: (num, num) -> (num, num) -> num"""
     x1, y1 = s
     x2, y2 = g
-    dx = math.fabs(x1 - x2)
-    dy = math.fabs(y1 - y2)
+    dx = int(math.fabs(x1 - x2))
+    dy = int(math.fabs(y1 - y2))
     #  c^2 =             a ^ 2   +  b  ^ 2
     #  c = sqrt(c^2)
     return math.sqrt((dx ** 2) + (dy ** 2))
@@ -68,7 +68,7 @@ def getTotalCost(current=0, goal=0, gVal=0, space=city.chart([],[])):
     hVal = heuristic(current, goal, space)
     return hVal + gVal
 
-def Astar(start=0, goal=0, space=city.chart([],[]))
+def Astar(start=0, goal=0, space=city.chart([],[])):
     """Astar :: nodenumber -> nodenumber -> chart -> [nodenumbers]"""
     #a few checks at the start
     if (space.lookupCity(start) == city.cityNotFound) or (space.lookupCity(goal) == city.cityNotFound):
@@ -134,10 +134,28 @@ if __name__ == "__main__":
     #unit testing
     print "Test 1 : Testing getEuclideanDistance"
     assert 1 == getEuclideanDistance((0,0),(1,0))
+    assert 6 == int(getEuclideanDistance((12,4),(6,7))) #really long double, just truncating it
 
     print "Test 2 : Testing reconstructPath"
     dir2 = {2:1, 3:2, 4:3, 5:3, 6:5, 7:6, 8:6}
     path2 = reconstructPath(dir2, 8)
     assert path2 == [1,2,3,5,6,8]
+
+    print "Test 3 : Testing heuristic"
+    citylist3 = [(1,'',35,24),(2,'',31,22),(3,'',34,21),(4,'',27,20)]
+    edgelist3 = [(1,2,5),(1,3,3),(2,1,5),(2,3,3),(2,4,5),(3,1,3),(3,2,3),(4,2,5)]
+    chart3 = city.chart(citylist3, edgelist3)
+    assert int(heuristic(1,2,chart3)) == 4
+
+    print "Test 4 : Testing getTotalCost"
+    assert int(getTotalCost(1,2,2,chart3)) == 6
+
+    print "Test 5 : Testing Simple A* Search"
+    path5 = Astar(1,4,chart3)
+    assert path5 == [1,2,4]
+    path5 = Astar(0,4,chart3)
+    assert path5 == nonExistentPath
+    path5 = Astar(1,5,chart3)
+    assert path5 == nonExistentPath
 
 
