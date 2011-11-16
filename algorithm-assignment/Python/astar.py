@@ -25,4 +25,35 @@
 #   step.                                                                      #
 ################################################################################
 
-import * from city
+import city
+import math
+
+def getEuclideanDistance(s=(0,0), g=(0,0)):
+    """getEuclideanDistance :: (num, num) -> (num, num) -> num"""
+    x1, y1 = s
+    x2, y2 = g
+    dx = math.fabs(x1 - x2)
+    dy = math.fabs(y1 - y2)
+    #  c^2 =             a ^ 2   +  b  ^ 2
+    #  c = sqrt(c^2)
+    return math.sqrt((dx ** 2) + (dy ** 2))
+
+def reconstructPath(prev={} , current=0):
+    """reconstructPath :: {nodenumber : prevnode} -> nodenumber -> [nodenumbers]"""
+    if current in prev.keys():
+        path = reconstructPath(prev, prev[current]) + [current]
+        return path
+    else:
+        return [current]
+
+if __name__ == "__main__":
+    #unit testing
+    print "Test 1 : Testing getEuclideanDistance"
+    assert 1 == getEuclideanDistance((0,0),(1,0))
+
+    print "Test 2 : Testing reconstructPath"
+    dir2 = {2:1, 3:2, 4:3, 5:3, 6:5, 7:6, 8:6}
+    path2 = reconstructPath(dir2, 8)
+    assert path2 == [1,2,3,5,6,8]
+
+
