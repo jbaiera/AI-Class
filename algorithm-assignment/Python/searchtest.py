@@ -45,4 +45,8 @@ print "1 to 27: ",
 testpath = astar.Astar(1, 27, mychart)
 print testpath
 
+print "0 (non-existant) to 1: ",
+testpath = astar.Astar(0, 1, mychart)
+print testpath
+
 
