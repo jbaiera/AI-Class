@@ -55,29 +55,80 @@ def heuristic(current=0, goal=0, space=city.chart([],[])):
     goalIdx = space.lookupCity(goal)
     if (startIdx == city.cityNotFound) or (goalIdx == city.cityNotFound):
         return 0 #there is no distance between cities that don't exist
-        #this should make it like djikstra's algorithm if the goal does not exist
     else:
         sCity = space.cities[startIdx]
         gCity= space.cities[goalIdx]
         #return the Euclidean Distance of the two cities.
         return getEuclideanDistance((sCity.xpos,sCity.ypos),(gCity.xpos,gCity.ypos))
 
+def getTotalCost(current=0, goal=0, gVal=0, space=city.chart([],[])):
+    """getTotalCost :: nodenumber -> nodenumber -> number -> chart -> number"""
+    #find the cost for the H() function
+    #add H and G together and return F
+    hVal = heuristic(current, goal, space)
+    return hVal + gVal
+
 def Astar(start=0, goal=0, space=city.chart([],[]))
     """Astar :: nodenumber -> nodenumber -> chart -> [nodenumbers]"""
     #a few checks at the start
     if (space.lookupCity(start) == city.cityNotFound) or (space.lookupCity(goal) == city.cityNotFound):
         #start or goal does not exist. Do not search!
-        return [-1]
+        return nonExistentPath
+
     #Set up some preliminary lists
-    openSet = [start] #add the starting node to the open set
-    closedSet = [] #no nodes visited yet
-    pathSet = {} #this will hold each node's predecessor
+    fringe = [start] #add the starting node to the fringe
+    visited = [] #no nodes visited yet
+    paths = {} #this will hold each node's predecessor
 
-    #keep track of the heuristic scores for all nodes
-    gScore = {}
-    hScore = {}
-    fScore = {}
+    #keep track of how far you've traveled on each node
+    gScore = {start:0} #begin with the start node's value in there
+    workingNode = start #we're going to use this to denote the node we are working on 
+    #It will get reset in the first loop, This is to make sure its in this scope.
+    
+    while len(fringe) != 0:
+        #choose the node that is best to traverse to
+        best = -1
+        for eachNode in fringe:
+            fCost = getTotalCost(eachNode, goal, gScore[eachNode], space)
+            if (best == -1) or (fCost < best):
+                #first run  or  better than current best:
+                best = fCost #then the current best is the new best
+                workingNode = eachNode #the next node to visit is this node
+        
+        #test to see if that is the goal
+        if workingNode == goal:
+            #reconstruct the path from the workingNode to the goal
+            return reconstructPath(paths, workingNode)
 
+        #if not, add it to the visited set, expand it's neighbors and add them to the fringe
+        visited.append(workingNode)
+        fringe.remove(workingNode)
+        workingNeighbors = space.getNeighbors(workingNode)
+        for eachNeighbor in workingNeighbors:
+            #REMEMBER THAT eachNeighbor is a tuple of form (node, cost)
+            updateNode = False
+            newGvalue = gScore[workingNode] + eachNeighbor[1]
+
+            if eachNeighbor[0] in visited:
+                #if a Neighbor is in the visited set, we'll skip it
+                continue
+            elif eachNeighbor[0] not in fringe:
+                #if it's not in the fringe, we will add it and update it's values
+                fringe.append(eachNeighbor[0])
+                updateNode = True
+            elif newGvalue < gScore[eachNeighbor[0]]:
+                #at this point, we know its not visited and its in the fringe
+                #if the new gscore is better than the old one, we want to update the stats for it
+                updateNode = True
+
+            if updateNode:
+                #we want to update the node's predecessor, and it's gScore value
+                paths[eachNeighbor[0]] = workingNode #come from the working node
+                gScore[eachNeighbor[0]] = newGvalue #the new G value is better than before
+        #end for loop
+    #end while loop
+    #if we make it out of the main loop, then we didn't find it.
+    return nonExistentPath 
 
 if __name__ == "__main__":
     #unit testing
