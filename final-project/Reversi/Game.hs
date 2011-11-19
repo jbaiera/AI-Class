@@ -28,11 +28,16 @@ initialGrid = [[0,0,0,0,0,0,0,0],
 initialBoard :: Board
 initialBoard = Board initialGrid
 
---play :: Board -> Player -> Position -> Board
+-- play takes a player and position and execute the move
+play :: Board -> Player -> Position -> Board
 play board player position = board'
-    where directions = [ (a,b) | a <- [(-1),0,1], b <- [(-1),0,1], (a,b) /= (0,0),
-                                 valid board player position (a,b) ]
+    where directions = [ (a,b) | a <- [(-1),0,1], b <- [(-1),0,1], (a,b) /= (0,0) ]
           board' = foldr (\d b -> capture b player position d) board directions
+
+-- playable checks if a move "makes sense" to make
+playable :: Board -> Player -> Position -> Bool
+playable board player position = foldr (\d s -> s || valid board player position d) False dirs
+    where dirs = [ (a,b) | a <- [(-1),0,1], b <- [(-1),0,1], (a,b) /= (0,0) ]
 
 -- valid determines whether or not we should flip tiles in that direction
 valid :: Board -> Player -> Position -> Direction -> Bool
@@ -46,25 +51,13 @@ valid board@(Board grid) player position@(px, py) direction@(dx, dy)
                 1 -> 2
                 2 -> 1
 
-{-
-valid board@(Board grid) player position@(px, py) direction@(dx, dy)
-    | outOfBounds (px + dx, py + dy)                = False
-    | current == opponent && next == player         = True
-    | current == 0                                  = False
-    | otherwise                                     = valid board player (px+dx,py+dy) direction
-    where next    = grid !! (px+dx) !! (py+dy)
-          current = grid !! px !! py
-          opponent = if player == 1 then 2 else 1
--}
-
 -- capture will flip all the tiles in one direction
 capture :: Board -> Player -> Position -> Direction -> Board
 capture board@(Board grid) player position@(px, py) direction@(dx, dy)
-    | outOfBounds (px+dx, py+dy)    = board
-    | next == player                = board
-    | otherwise                     = capture (Board grid') player (px+dx, py+dy) direction
-    where grid' = set grid position player
-          next = grid !! (px+dx) !! (py+dy)
+    | not flipping  = (Board grid)
+    | flipping      = capture (Board grid')  player (px+dx, py+dy) direction
+    where flipping = valid board player position direction
+          grid' = set grid position player
 
 -- outOfBounds checks if a position is a valid board position
 outOfBounds :: Position -> Bool
