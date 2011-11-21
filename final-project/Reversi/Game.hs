@@ -28,6 +28,11 @@ initialGrid = [[0,0,0,0,0,0,0,0],
 initialBoard :: Board
 initialBoard = Board initialGrid
 
+-- gives all the possible moves for a certain position
+possibleMoves :: Board -> Player -> [Position]
+possibleMoves board player = positions
+    where positions = [ (x,y) | x <- [0..7], y <- [0..7], playable board player (x,y) ]
+
 -- play takes a player and position and execute the move
 play :: Board -> Player -> Position -> Board
 play board player position = board'
@@ -36,14 +41,18 @@ play board player position = board'
 
 -- playable checks if a move "makes sense" to make
 playable :: Board -> Player -> Position -> Bool
-playable board player position = foldr (\d s -> s || valid board player position d) False dirs
+playable board@(Board grid) player position@(px,py) = current && anyValid
     where dirs = [ (a,b) | a <- [(-1),0,1], b <- [(-1),0,1], (a,b) /= (0,0) ]
+          anyValid = foldr (\d s -> s || valid board player position d) False dirs
+          current = (grid !! px !! py) == 0
+
 
 -- valid determines whether or not we should flip tiles in that direction
 valid :: Board -> Player -> Position -> Direction -> Bool
 valid board@(Board grid) player position@(px, py) direction@(dx, dy)
     | outOfBounds (px+dx, py+dy)                = False
     | current == opponent && next == player     = True
+    | next == 0                                 = False
     | otherwise                                 = valid board player (px+dx, py+dy) direction
     where current = grid !! px !! py
           next = grid !! (px+dx) !! (py+dy)
