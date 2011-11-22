@@ -9,5 +9,6 @@ main = do
     print $ score curr 1
     print $ score curr 2
     print $ greedy curr 2
+    prettyPrint $ play curr 2 $ greedy curr 2
     
 
