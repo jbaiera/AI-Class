@@ -1,5 +1,6 @@
 import Reversi.Game
 import Reversi.Strategies
+import Reversi.Interface
 
 main = do
     prettyPrint $ play initialBoard 1 (3,5)
@@ -12,5 +13,6 @@ main = do
     prettyPrint $ play curr 2 $ greedy curr 2
     print $ move $ play curr 2 $ greedy curr 2
     print $ move curr
+    simulate initialBoard 1 greedy greedy
     
 

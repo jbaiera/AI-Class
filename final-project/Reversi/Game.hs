@@ -30,7 +30,8 @@ initialBoard = Board initialGrid
 
 -- makes it pretty
 prettyPrint :: Board -> IO ()
-prettyPrint (Board grid) = mapM_ print grid
+prettyPrint (Board grid) = do putStrLn "Current board:"
+                              mapM_ print grid
 
 -- returns the score for that player
 score :: Board -> Player -> Int
