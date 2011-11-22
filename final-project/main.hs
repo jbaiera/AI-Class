@@ -1,10 +1,13 @@
 import Reversi.Game
+import Reversi.Strategies
 
 main = do
-    print $ play initialBoard 1 (3,5)
+    prettyPrint $ play initialBoard 1 (3,5)
     print $ possibleMoves initialBoard 1
     let curr = play initialBoard 1 (3,5)
+    prettyPrint curr
     print $ score curr 1
     print $ score curr 2
+    print $ greedy curr 2
     
 

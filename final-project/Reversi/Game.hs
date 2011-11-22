@@ -28,6 +28,10 @@ initialGrid = [[0,0,0,0,0,0,0,0],
 initialBoard :: Board
 initialBoard = Board initialGrid
 
+-- makes it pretty
+prettyPrint :: Board -> IO ()
+prettyPrint (Board grid) = mapM_ print grid
+
 -- returns the score for that player
 score :: Board -> Player -> Int
 score (Board grid) player = foldr (\r n -> n + scoreRow r) 0 grid
