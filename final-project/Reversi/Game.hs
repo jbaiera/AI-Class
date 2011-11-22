@@ -28,6 +28,11 @@ initialGrid = [[0,0,0,0,0,0,0,0],
 initialBoard :: Board
 initialBoard = Board initialGrid
 
+-- returns the score for that player
+score :: Board -> Player -> Int
+score (Board grid) player = foldr (\r n -> n + scoreRow r) 0 grid
+    where scoreRow = foldr (\x n -> if x == player then 1+n else n) 0
+
 -- gives all the possible moves for a certain position
 possibleMoves :: Board -> Player -> [Position]
 possibleMoves board player = positions
