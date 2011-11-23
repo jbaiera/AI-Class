@@ -30,8 +30,24 @@ initialBoard = Board initialGrid
 
 -- makes it pretty
 prettyPrint :: Board -> IO ()
-prettyPrint (Board grid) = do putStrLn "Current board:"
-                              mapM_ print grid
+prettyPrint (Board grid) = do putStrLn "Current score..."
+                              putStrLn $ " Player 1: " ++ (show $ score board 1)
+                              putStrLn $ " Player 2: " ++ (show $ score board 2)
+                              mapM_ (putStrLn . toStr) grid
+                              putStrLn ""
+                              where toStr = map transchar
+                                    transchar 0 = '.'
+                                    transchar 1 = 'O'
+                                    transchar 2 = '@'
+                                    board = Board grid
+
+-- prints the winner
+printWinner :: Board -> IO ()
+printWinner board = putStrLn status
+    where status
+              | score board 1 > score board 2 = "Player 1 wins!"
+              | score board 2 > score board 1 = "Player 2 wins!"
+              | otherwise = "Draw!"
 
 -- returns the score for that player
 score :: Board -> Player -> Int
