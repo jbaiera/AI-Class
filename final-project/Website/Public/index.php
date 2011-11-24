@@ -2,7 +2,7 @@
 
 include('connect.php');
 
-if (! isset($_SESSION['id']))
+if (! isset($_SESSION['user_id']))
 {
     echo('Please log in <a href="login.php">here</a>.');
 }

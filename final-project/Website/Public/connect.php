@@ -7,8 +7,19 @@ include('../../../../../login_info.php');
 // $db_host     set in login_info file, provides hostname for database
 // $db_name     set in login_info file, provides name of database
 
-mysql_connect($db_host, $db_username, $db_password) or die('Error connecting to database.');
-mysql_select_db($db_name) or die('Error selecting database.');
+session_start();
+
+$connection = mysql_connect($db_host, $db_username, $db_password);
+
+if (!$connection) {
+    die('Error connecting to database.');
+}
+
+if (!mysql_select_db($db_name)) {
+    die('Error selecting database.');
+}
+
+$_SESSION['debug'] = false;
 
 ?>
 
