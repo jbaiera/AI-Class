@@ -9,14 +9,10 @@ include('../../../../../login_info.php');
 
 session_start();
 
-$connection = mysql_connect($db_host, $db_username, $db_password);
+$db = new mysqli($db_host, $db_username, $db_password, $db_name);
 
-if (!$connection) {
+if ($db->connect_errno != 0) {
     die('Error connecting to database.');
-}
-
-if (!mysql_select_db($db_name)) {
-    die('Error selecting database.');
 }
 
 $_SESSION['debug'] = false;

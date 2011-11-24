@@ -15,9 +15,15 @@ if (isset($_POST['password']))
 
 $hashed_password = hash('sha256', $username . ':' . $password);
 
-echo ($hashed_password);
+$query = $db->prepare("SELECT * FROM login WHERE password = ?");
+$query->bind_param("s", $hashed_password);
+$query->execute();
+$query->bind_result($rows);
+$query->fetch();
+$query->close();
 
-//$prepared_statment = $connection->prepare('select * from login where ');
+//var_dump($rows);
+
 
 ?>
 
