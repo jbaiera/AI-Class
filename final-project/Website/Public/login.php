@@ -1,0 +1,6 @@
+<?
+
+include('connect.php');
+
+?>
+
