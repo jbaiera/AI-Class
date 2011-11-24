@@ -15,15 +15,19 @@ if (isset($_POST['password']))
 
 $hashed_password = hash('sha256', $username . ':' . $password);
 
-$query = $db->prepare("SELECT * FROM login WHERE password = ?");
-$query->bind_param("s", $hashed_password);
+$query = $db->prepare("SELECT id FROM login WHERE password = ? and username = ?");
+$query->bind_param("ss", substr($hashed_password,0,60), $username);
 $query->execute();
 $query->bind_result($rows);
 $query->fetch();
 $query->close();
 
-//var_dump($rows);
-
+if (count($rows) > 1) {
+    echo ("FATAL ERROR: contact ntietz@gmail.com");
+} else if (isset($_POST['username']) && $rows > 0) {
+    $_SESSION['user_id'] = $rows;
+    header('Location: index.php');
+}
 
 ?>
 
