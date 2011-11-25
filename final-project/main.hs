@@ -3,18 +3,22 @@ import Reversi.Strategies
 import Reversi.Interface
 
 main = do
-    prettyPrint $ play initialBoard 1 (3,5)
-    print $ possibleMoves initialBoard 1
-    let curr = play initialBoard 1 (3,5)
-    prettyPrint curr
-    print $ score curr 1
-    print $ score curr 2
-    print $ greedy curr 2
-    prettyPrint $ play curr 2 $ greedy curr 2
-    print $ move $ play curr 2 $ greedy curr 2
-    print $ move curr
-    simulate initialBoard 1 greedy greedy
-    simulate initialBoard 1 evaporation evaporation
-    simulate initialBoard 1 mobility greedy
-    
+    putStr "Greedy vs greedy:           "
+    shortSimulate initialBoard 1 greedy greedy
+    putStr "Greedy vs evaporation:      "
+    shortSimulate initialBoard 1 greedy evaporation
+    putStr "Greedy vs mobility:         "
+    shortSimulate initialBoard 1 greedy mobility
+    putStr "Evaporation vs greedy:      "
+    shortSimulate initialBoard 1 evaporation greedy
+    putStr "Evaporation vs evaporation: "
+    shortSimulate initialBoard 1 evaporation evaporation
+    putStr "Evaporation vs mobility:    "
+    shortSimulate initialBoard 1 evaporation mobility
+    putStr "Mobility vs greedy:         "
+    shortSimulate initialBoard 1 mobility greedy
+    putStr "Mobility vs evaporation:    "
+    shortSimulate initialBoard 1 mobility evaporation
+    putStr "Mobility vs mobility:       "
+    shortSimulate initialBoard 1 mobility mobility
 

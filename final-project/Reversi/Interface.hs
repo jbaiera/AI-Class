@@ -14,5 +14,14 @@ simulate board player strategy1 strategy2
                         simulate (play board 2 $ strategy2 board player) 1 strategy1 strategy2
 
 -- plays a game between a human and an AI
+-- (TODO)
+
+-- plays a game between two functions, only printing the final status
+shortSimulate :: Board -> Player -> Strategy -> Strategy -> IO ()
+shortSimulate board player strategy1 strategy2
+    | possibleMoves board player == []  = printWinner board
+    | player == 1  = shortSimulate (play board 1 $ strategy1 board player) 2 strategy1 strategy2
+    | otherwise    = shortSimulate (play board 2 $ strategy2 board player) 1 strategy1 strategy2
+
 
 
