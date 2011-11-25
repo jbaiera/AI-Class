@@ -14,4 +14,7 @@ main = do
     print $ move $ play curr 2 $ greedy curr 2
     print $ move curr
     simulate initialBoard 1 greedy greedy
+    simulate initialBoard 1 evaporation evaporation
+    simulate initialBoard 1 mobility greedy
+    
 
