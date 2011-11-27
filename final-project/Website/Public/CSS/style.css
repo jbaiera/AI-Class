@@ -1,0 +1,11 @@
+body
+{
+    background : none scroll repeat 0 #EEE;
+}
+
+div.maincontainer
+{
+    background : none scroll repeat 0 #CCC;
+    border-radius : 5px 5px 5px 5px;
+    box-shadow : 5px 5px 10px #333;
+}
