@@ -6,10 +6,12 @@ body
 div.maincontainer
 {
     background : none scroll repeat 0 #DDD;
+    position : relative;
     border-radius : 5px 5px 5px 5px;
     box-shadow : 5px 5px 10px #333;
     width : 1002px;
     height : 580px;
+    margin : auto;
 }
 
 div.boardcontainer
