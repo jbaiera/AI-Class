@@ -1,5 +1,7 @@
 <?php
 
+error_reporting(E_ALL);
+
 include('connect.php');
 
 // ADD LOGIC FOR MAKING NEW GAME HERE
@@ -33,7 +35,15 @@ if (isset($_POST['opponent'])) {
         $player_2 = $player;
     }
 
-    // ADD LOGIC TO INSERT GAME IN TABLE
+    $game_type = "reversi";
+    $game_state = "[[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,1,2,0,0,0],[0,0,0,2,1,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]]";
+
+    $stmt = $db->prepare("INSERT INTO games (game_type, player_1, player_2, game_state) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("siis", $game_type, intval($player_1), intval($player_2), $game_state);
+    $stmt->execute();
+    $stmt->bind_result($foo);
+    $stmt->fetch();
+    $stmt->close();
 
     header('Location: resumegame.php');
 }
