@@ -1,11 +1,11 @@
 <?php
 
-//include("connect.php");
+include("connect.php");
 
-/*if (! isset($_SESSION['user_id']))
+if (! isset($_SESSION['user_id']))
 {
     header('Location: index.php');
-}*/
+}
 
 $ai_location = '../..';
 
