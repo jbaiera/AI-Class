@@ -1,11 +1,58 @@
 body
 {
-    background : none scroll repeat 0 #EEE;
+    background : none scroll repeat 0 #666;
 }
 
 div.maincontainer
 {
-    background : none scroll repeat 0 #CCC;
+    background : none scroll repeat 0 #DDD;
     border-radius : 5px 5px 5px 5px;
     box-shadow : 5px 5px 10px #333;
+    width : 1002px;
+    height : 580px;
+}
+
+div.boardcontainer
+{
+    background : none scroll repeat 0 #DDD;
+    border-radius : 5px 0px 0px 5px;
+    border-right : solid 1px #777;
+    padding : 15px 0px 0px 0px;
+    width : 600px;
+    height : 565px;
+    float : left;
+}
+
+div.rightside
+{
+    background : none scroll repeat 0 #CCC;
+    border-radius: 0px 5px 5px 0px;
+    border-left: solid 1px #EEE;
+    width : 400px;
+    height : 580px;
+    float : right;
+}
+
+div.boardoutline
+{
+    background : none scroll repeat 0 black;
+    position : relative;
+    padding : 5px 5px 30px 5px;
+    border-radius : 10px 10px 10px 10px;
+    width : 530px;
+    margin : auto;
+}
+
+h3.boardname
+{
+    font-family : helvetica;
+    color : white;
+    text-align : center;
+}
+
+table.reversiboard
+{
+    background : none scroll repeat 0 #000;
+    border : solid 1px #666;
+    margin : auto;
 }
