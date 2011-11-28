@@ -7,6 +7,10 @@ if (! isset($_SESSION['user_id']))
     header('Location: index.php');
 }
 
+if (!isset($_GET['game_id'])) {
+    header('Location: choosegame.php');
+}
+
 $ai_location = '../..';
 
 //initialize the board
@@ -40,6 +44,7 @@ function displayGameBoard($boardstate)
         }
     }
 }
+
 
 ?>
 
