@@ -13,7 +13,8 @@ create table games
     player_1 int not null,
     player_2 int not null,
     start_time datetime,
-    end_time datetime
+    end_time datetime,
+    game_state varchar(160)
 );
 
 create table moves
