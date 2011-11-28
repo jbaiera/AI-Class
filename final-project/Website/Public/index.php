@@ -18,8 +18,11 @@ else
     <title>AI Final Project - Index</title>
 </head>
 <body>
-    <h1>Games to resume:</h1>
-    <a href="resumegame.php">(temporary link for testing</a>
+    <h1>Options:</h1>
+    <ul>
+        <li><a href="newgame.php">Start a new game</a></li>
+        <li><a href="resumegame.php">Resume a game</a></li>
+    </ul>
 </body>
 </html>
 
