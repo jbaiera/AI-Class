@@ -7,6 +7,10 @@ if (! isset($_SESSION['user_id']))
     header('Location: index.php');
 }
 
+$ai_location = '../..';
+
+// echo (system("pwd"));
+
 ?>
 
 <html>
@@ -25,3 +29,4 @@ if (! isset($_SESSION['user_id']))
     </div>
 </body>
 </html>
+
