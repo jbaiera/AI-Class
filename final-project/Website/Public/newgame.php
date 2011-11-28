@@ -38,8 +38,6 @@ if (isset($_POST['opponent'])) {
     header('Location: resumegame.php');
 }
 
-var_dump($_POST);
-
 ?>
 
 <html>
