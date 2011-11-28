@@ -9,10 +9,11 @@ create table login
 create table games
 (
     game_id int not null primary key auto_increment,
-    game_type varchar(10),
+    game_type varchar(10) not null,
     player_1 int not null,
     player_2 int not null,
-    game_state varchar(160)
+    board_state varchar(160) not null,
+    to_move int not null
 );
 
 create table moves
