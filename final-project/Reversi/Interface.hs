@@ -32,4 +32,15 @@ readAndPlay = do
     let (Board grid') = play (Board grid) player position
     putStrLn $ show grid'
 
+-- reads a board, a strategy, and a player from the command line, then prints the moved board
+readPlayStrategy :: IO ()
+readPlayStrategy = do
+    args <- getArgs
+    let grid = read (args !! 0) :: [[Int]]
+    let strategyDescriptor = read (args !! 1) :: String
+    let player = read (args !! 2) :: Player
+    let strategy = greedy -- generalize this... obviously...
+    let (Board grid') = play (Board grid) player (strategy (Board grid) player)
+    putStrLn $ show grid'
+
 
