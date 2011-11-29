@@ -2,14 +2,13 @@
 
 include("connect.php");
 
-if (! isset($_SESSION['user_id']))
-{
+if (! isset($_SESSION['user_id'])) {
     header('Location: index.php');
-}
-
-if (!isset($_GET['game_id'])) {
+} else if (!isset($_GET['game_id'])) {
     header('Location: choosegame.php');
 }
+
+// TODO: add check to ensure that the game belongs to the user
 
 $ai_location = '../..';
 

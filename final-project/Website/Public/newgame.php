@@ -1,7 +1,5 @@
 <?php
 
-error_reporting(E_ALL);
-
 include('connect.php');
 
 // ADD LOGIC FOR MAKING NEW GAME HERE
@@ -16,6 +14,9 @@ include('connect.php');
     game_state  : begins as initialGrid
 
 */
+
+if (! isset($_SESSION['user_id']) )
+    header('Location: index.php');
 
 if (isset($_POST['opponent'])) {
     $player = $_SESSION['user_id'];
@@ -37,9 +38,10 @@ if (isset($_POST['opponent'])) {
 
     $game_type = "reversi";
     $game_state = "[[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,1,2,0,0,0],[0,0,0,2,1,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]]";
+    $to_move = 1; //player 1 always moves first
 
-    $stmt = $db->prepare("INSERT INTO games (game_type, player_1, player_2, game_state) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("siis", $game_type, intval($player_1), intval($player_2), $game_state);
+    $stmt = $db->prepare("INSERT INTO games (game_type, player_1, player_2, board_state, to_move) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("siisi", $game_type, intval($player_1), intval($player_2), $game_state, $to_move);
     $stmt->execute();
     $stmt->bind_result($foo);
     $stmt->fetch();
