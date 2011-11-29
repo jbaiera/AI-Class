@@ -4,7 +4,7 @@ include('connect.php');
 
 if (! isset($_SESSION['user_id']))
 {
-    echo('Please log in <a href="login.php">here</a>.');
+    echo('Please log in <a href="login.php">here</a>. New users should <a href="register.php">register</a>.');
 }
 else
 {
