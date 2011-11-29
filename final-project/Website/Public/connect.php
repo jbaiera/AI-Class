@@ -1,6 +1,6 @@
 <?
 
-include('../../../../../login_info.php');
+include('../login_info.php');
 
 // $db_username set in login_info file, provides username for database
 // $db_password set in login_info file, provides password for database
