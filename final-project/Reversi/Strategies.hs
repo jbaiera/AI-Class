@@ -4,6 +4,23 @@ import Reversi.Game
 
 type Strategy = Board -> Player -> Position
 
+-- Confidence should be in the range of 0.0 to 100.0.
+type Confidence = Float
+
+type Weighting = Board -> Player -> [(Position, Confidence)]
+
+--
+-- testWeighting
+--
+-- This function is being used to test the new data type Weighting.
+--
+
+testWeighting :: Weighting
+testWeighting grid player = [((1,2), 22.4)]
+
+
+
+--
 greedy :: Strategy
 greedy board@(Board grid) player = best
     where moves = possibleMoves board player
@@ -68,5 +85,3 @@ mobility board@(Board grid) player = best
                        (head moves) (tail moves)
           better x y = (length $ possibleMoves (play board player x) player)
                      > (length $ possibleMoves (play board player y) player)
-
-
