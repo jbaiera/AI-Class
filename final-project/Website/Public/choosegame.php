@@ -7,8 +7,8 @@ if (! isset($_SESSION['user_id']))
 
 $user_id = $_SESSION['user_id'];
 
-function displayGames() {
-    global $db, $user_id;
+function displayGames($user_id) {
+    global $db;
 
     echo("<ul>");
 
@@ -62,5 +62,5 @@ function displayGames() {
 </head>
 <body>
     <h1>Games:</h1>
-    <?php displayGames(); ?>
+    <?php displayGames($_SESSION['user_id']); ?>
 

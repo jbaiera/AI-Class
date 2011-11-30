@@ -2,8 +2,11 @@ module Reversi.Interface where
 
 import Reversi.Game
 import Reversi.Strategies
-
+import Reversi.Interface.LoginInfo as LoginInfo
 import System.Environment
+import Control.Monad
+import Database.HDBC
+import Database.HDBC.MySQL
 
 -- plays a game between two functions, printing the state of the board each time
 simulate :: Board -> Player -> Strategy -> Strategy -> IO ()
@@ -43,4 +46,28 @@ readPlayStrategy = do
     let (Board grid') = play (Board grid) player (strategy (Board grid) player)
     putStrLn $ show grid'
 
+
+{- THIS BLOCK IS FOR DATABASE CONNECTIONS
+    requires: Reversi.Interface.LoginInfo with the following constants:
+                dbHostname
+                dbUsername
+                dbPassword
+                dbDatabase
+                dbSocket
+-}
+
+type GameId = Int
+
+conn :: IO Connection
+conn = connectMySQL defaultMySQLConnectInfo {
+            mysqlHost       = LoginInfo.dbHostname
+            mysqlUser       = LoginInfo.dbUsername
+            mysqlPassword   = LoginInfo.dbPassword
+            mysqlDatabase   = LoginInfo.dbDatabase
+            mysqlUnixSocket = LoginInfo.dbSocket
+        }
+
+-- Takes a game, player, and position and tries to update the database for that move
+commitMove :: GameId -> Player -> Position -> IO Connection -> IO ()
+commitMove = return ()
 

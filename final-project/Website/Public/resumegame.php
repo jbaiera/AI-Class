@@ -10,6 +10,9 @@ if (! isset($_SESSION['user_id'])) {
 
 // TODO: add check to ensure that the game belongs to the user
 
+
+
+
 $ai_location = '../..';
 
 //initialize the board
