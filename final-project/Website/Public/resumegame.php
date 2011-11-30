@@ -39,8 +39,10 @@ if ($player_1 == $player_2) {
     $opponent = 1;
 }
 
-if ($player != $to_move) {
-    // ... TODO: HANDLE NOT BEING PLAYER'S MOVE
+if ($player == $to_move) {
+    $my_move = true;
+} else {
+    $my_move = false;
 }
 
 $program_location = '../..';
@@ -64,13 +66,25 @@ for ($i = 0; $i < $num_valid_moves; $i++) {
 
 function displayGameBoard($boardstate)
 {
+    global $my_move, $game_id;
+
     for ($i = 0; $i < 8; $i++)
     {
         echo('<tr>');
         for ($j = 0; $j < 8; $j++)
         {
+            if ($boardstate[$i][$j] == 3 && $my_move == true) {
+                $add_link = true;
+            } else {
+                $add_link = false;
+            }
+
             echo("<td>");
-            //check validity <a href='resumegame.php?game_id=$game_id'>");
+            
+            if ($add_link == true) {
+                echo("<a href='resumegame.php?game_id=$game_id&xpos=$i&ypos=$j'>");
+            }
+
             if ($boardstate[$i][$j] == 0) {
                 $imgsrc = 'src="img/blank.jpeg"';
             } else if ($boardstate[$i][$j] == 1) {
@@ -81,7 +95,9 @@ function displayGameBoard($boardstate)
                 $imgsrc = 'src="img/valid.jpeg"';
             }
             echo("<img class=\"space\" height=\"50\" width=\"50\" $imgsrc />");
-            //echo("</a>");
+
+            if ($add_link == true)
+                echo("</a>");
         }
     }
 }
