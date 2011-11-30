@@ -11,10 +11,12 @@ if (! isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 $game_id = $_GET['game_id'];
 
-// TODO: add check to ensure that the game belongs to the user
-$stmt = $db->prepare("SELECT game_id, player_1, player_2, board_state, to_move FROM games WHERE player_1 = ? or player_2 = ? and game_id = ?");
+$stmt = $db->prepare("SELECT player_1, player_2, board_state, to_move FROM games WHERE (player_1 = ? or player_2 = ?) and game_id = ?");
 $stmt->bind_param("ssi", $user_id, $user_id, $game_id);
 $stmt->execute();
+$stmt->bind_result($player_1, $player_2, $board_state, $to_move);
+$stmt->store_result();
+$stmt->fetch();
 
 $num_rows = $stmt->num_rows();
 
@@ -26,21 +28,39 @@ if ($num_rows == 0) {
     header('Location: choosegame.php');
 }
 
+if ($player_1 == $player_2) {
+    $player = $to_move;
+    $opponenet = ($to_move == 1)?2:1;
+} else if ($user_id == $player_1) {
+    $player = 1;
+    $opponent = 2;
+} else {
+    $player = 2;
+    $opponent = 1;
+}
 
+if ($player != $to_move) {
+    // ... TODO: HANDLE NOT BEING PLAYER'S MOVE
+}
 
+$program_location = '../..';
 
-
-$ai_location = '../..';
+$valid_moves_string = shell_exec("$program_location/findvalid $game_id $player");
 
 //initialize the board
 for ($i = 0; $i < 8; $i++)
     for ($j = 0; $j < 8; $j++)
-        $board[$i][$j] = 0;
+        $board[$i][$j] = $board_state[2 + 2*$j + 18*$i];
 
-//board testing
-$board[3][4] = 1;
-$board[4][5] = 2;
-$board[5][6] = 3;
+$num_valid_moves = (strlen($valid_moves_string) - 1) / 6;
+
+for ($i = 0; $i < $num_valid_moves; $i++) {
+    // magic! this is from interpreting the string findvalid prints out
+    $x = $valid_moves_string[6*$i + 2];
+    $y = $valid_moves_string[6*$i + 4];
+    $board[$x][$y] = 3;
+}
+
 
 function displayGameBoard($boardstate)
 {
@@ -49,7 +69,8 @@ function displayGameBoard($boardstate)
         echo('<tr>');
         for ($j = 0; $j < 8; $j++)
         {
-            echo('<td>');
+            echo("<td>");
+            //check validity <a href='resumegame.php?game_id=$game_id'>");
             if ($boardstate[$i][$j] == 0) {
                 $imgsrc = 'src="img/blank.jpeg"';
             } else if ($boardstate[$i][$j] == 1) {
@@ -60,6 +81,7 @@ function displayGameBoard($boardstate)
                 $imgsrc = 'src="img/valid.jpeg"';
             }
             echo("<img class=\"space\" height=\"50\" width=\"50\" $imgsrc />");
+            //echo("</a>");
         }
     }
 }

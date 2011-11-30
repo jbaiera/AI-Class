@@ -7,6 +7,8 @@ import System.Environment
 import Control.Monad
 import Database.HDBC
 import Database.HDBC.MySQL
+import Database.HDBC.SqlValue
+import qualified Data.ByteString.Char8 as ByteString
 
 -- plays a game between two functions, printing the state of the board each time
 simulate :: Board -> Player -> Strategy -> Strategy -> IO ()
@@ -58,16 +60,23 @@ readPlayStrategy = do
 
 type GameId = Int
 
-conn :: IO Connection
 conn = connectMySQL defaultMySQLConnectInfo {
-            mysqlHost       = LoginInfo.dbHostname
-            mysqlUser       = LoginInfo.dbUsername
-            mysqlPassword   = LoginInfo.dbPassword
-            mysqlDatabase   = LoginInfo.dbDatabase
+            mysqlHost       = LoginInfo.dbHostname,
+            mysqlUser       = LoginInfo.dbUsername,
+            mysqlPassword   = LoginInfo.dbPassword,
+            mysqlDatabase   = LoginInfo.dbDatabase,
             mysqlUnixSocket = LoginInfo.dbSocket
         }
 
 -- Takes a game, player, and position and tries to update the database for that move
 commitMove :: GameId -> Player -> Position -> IO Connection -> IO ()
-commitMove = return ()
+commitMove _ _ _ _ = return ()
+
+-- Get valid moves for a player in a game
+getAllValid :: Connection -> GameId -> Player -> IO [Position]
+getAllValid conn game player = do
+    results <- quickQuery' conn "SELECT board_state FROM games WHERE game_id = ?" [toSql game]
+    let board = Board (read (getString $ results !! 0 !! 0) :: [[Int]])
+    return $ possibleMoves board player
+    where getString (SqlByteString bs) = ByteString.unpack bs
 
