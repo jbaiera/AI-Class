@@ -8,7 +8,24 @@ if (! isset($_SESSION['user_id'])) {
     header('Location: choosegame.php');
 }
 
+$user_id = $_SESSION['user_id'];
+$game_id = $_GET['game_id'];
+
 // TODO: add check to ensure that the game belongs to the user
+$stmt = $db->prepare("SELECT game_id, player_1, player_2, board_state, to_move FROM games WHERE player_1 = ? or player_2 = ? and game_id = ?");
+$stmt->bind_param("ssi", $user_id, $user_id, $game_id);
+$stmt->execute();
+
+$num_rows = $stmt->num_rows();
+
+if ($num_rows == 0) {
+    // no such game found
+    header('Location: choosegame.php');
+} else if ($num_rows > 1) {
+    // shit, we have too many games! no error handling, just run away
+    header('Location: choosegame.php');
+}
+
 
 
 
