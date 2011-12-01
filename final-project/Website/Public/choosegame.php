@@ -7,13 +7,13 @@ if (! isset($_SESSION['user_id']))
 
 $user_id = $_SESSION['user_id'];
 
-function displayGames($user_id) {
+function displayGames($user_id, $winner) {
     global $db;
 
     echo("<ul>");
 
-    $stmt = $db->prepare("SELECT game_id, player_1, player_2, game_type FROM games WHERE player_1 = ? or player_2 = ?");
-    $stmt->bind_param("ii", $user_id, $user_id);
+    $stmt = $db->prepare("SELECT game_id, player_1, player_2, game_type FROM games WHERE (player_1 = ? or player_2 = ?) and winner = ?");
+    $stmt->bind_param("iii", $user_id, $user_id, $winner);
     $stmt->execute();
     $stmt->bind_result($game_id, $player_1, $player_2, $game_type);
     $stmt->store_result();
@@ -54,6 +54,15 @@ function displayGames($user_id) {
     echo("</ul>");
 }
 
+function displayCurrentGames($user_id) {
+    displayGames($user_id, 0);
+}
+
+function displayOldGames($user_id) {
+    displayGames($user_id, 1);
+    displayGames($user_id, 2);
+}
+
 ?>
 
 <html>
@@ -61,6 +70,12 @@ function displayGames($user_id) {
     <title>AI Final - Choose a Game</title>
 </head>
 <body>
-    <h1>Games:</h1>
-    <?php displayGames($_SESSION['user_id']); ?>
+    <a href="index.php">Home</a>
+    <h1>Ongoing games:</h1>
+    <?php displayCurrentGames($_SESSION['user_id']); ?>
+
+    <h1>Past games:</h1>
+    <?php displayOldGames($_SESSION['user_id']); ?>
+</body>
+</html>
 

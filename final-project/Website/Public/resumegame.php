@@ -11,10 +11,10 @@ if (! isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 $game_id = $_GET['game_id'];
 
-$stmt = $db->prepare("SELECT player_1, player_2, board_state, to_move FROM games WHERE (player_1 = ? or player_2 = ?) and game_id = ?");
+$stmt = $db->prepare("SELECT player_1, player_2, board_state, to_move, winner FROM games WHERE (player_1 = ? or player_2 = ?) and game_id = ?");
 $stmt->bind_param("ssi", $user_id, $user_id, $game_id);
 $stmt->execute();
-$stmt->bind_result($player_1, $player_2, $board_state, $to_move);
+$stmt->bind_result($player_1, $player_2, $board_state, $to_move, $winner);
 $stmt->store_result();
 $stmt->fetch();
 
@@ -30,7 +30,7 @@ if ($num_rows == 0) {
 
 if ($player_1 == $player_2) {
     $player = $to_move;
-    $opponenet = ($to_move == 1)?2:1;
+    $opponent = ($to_move == 1)?2:1;
 } else if ($user_id == $player_1) {
     $player = 1;
     $opponent = 2;
@@ -50,6 +50,12 @@ if ($player == $to_move) {
 $program_location = '../..';
 
 $valid_moves_string = shell_exec("$program_location/findvalid $game_id $player");
+
+if (strlen($valid_moves_string) == 3) {
+    // no valid moves
+    shell_exec("$program_location/aiplay \"$opponent_id\" \"$to_move\" \"$game_id\" &");
+}
+
 
 $blackscore = 0;
 $whitescore = 0;
@@ -153,11 +159,21 @@ function displayGameBoard($boardstate)
         </div>
         <div class="rightside">
         <a href="index.php">Home</a> | <a href="choosegame.php">Other games</a> | <a href="resumegame.php?game_id=<?php echo($game_id);?>">Refresh</a>
-        <h3>Scoreboard</h3>
-        <p>Black: <?php echo($blackscore); ?></p>
-        <p>White: <?php echo($whitescore); ?></p>
-        <p>It is <?php if ($to_move == 1) echo("black"); else echo("white"); ?> to move.</p>
-        </div>
+        <?php
+        if ($winner == 0) {
+            $movestring = ($to_move == 1) ? "black" : "white";
+            echo("<h3>Scoreboard</h3>
+        <p>Black: $blackscore</p>
+        <p>White: $whitescore</p>
+        <p>It is $movestring to move.</p>
+        </div>"); 
+        } else {
+            $winstring = ($winner == 1) ? "black" : "white";
+            if (($winner == 1 && $player_1 == $user_id) || ($winner == 2 && $player_2 == $user_id))
+                $winstring .= " (you)";
+            echo("<p>The winner is $winstring.</p>");
+        }
+        ?>
     </div>
 </body>
 </html>

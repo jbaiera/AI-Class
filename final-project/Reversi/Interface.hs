@@ -90,10 +90,13 @@ aiCommitMove conn game player strategy = do
     let pass = ((length $ possibleMoves board player) == 0)
     let gameover = pass && ((length $ possibleMoves board opponent) == 0)
     let (Board grid') = if pass then board else play board player (strategy board player)
+    let winner = if (score board 1) > (score board 2) then 1 else 2
     let updateQuery = if not gameover
                         then "UPDATE games SET board_state = ?, to_move = ? WHERE game_id = ?"
-                        else "foo"
-    updateResults <- quickQuery' conn updateQuery [SqlString (show grid'), SqlInteger (fromIntegral opponent), SqlInteger (fromIntegral game)]
+                        else "UPDATE games SET winner = ?"
+    updateResults <- if not gameover
+                        then quickQuery' conn updateQuery [SqlString (show grid'), SqlInteger (fromIntegral opponent), SqlInteger (fromIntegral game)]
+                        else quickQuery' conn updateQuery [SqlInteger winner]
     return ()
 
 

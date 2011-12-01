@@ -13,7 +13,8 @@ create table games
     player_1 int not null,
     player_2 int not null,
     board_state varchar(160) not null,
-    to_move int not null
+    to_move int not null,
+    winner int not null
 );
 
 create table moves

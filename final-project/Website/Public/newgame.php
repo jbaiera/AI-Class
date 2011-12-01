@@ -39,9 +39,10 @@ if (isset($_POST['opponent'])) {
     $game_type = "reversi";
     $game_state = "[[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,1,2,0,0,0],[0,0,0,2,1,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0]]";
     $to_move = 1; //player 1 always moves first
+    $winner = 0;
 
-    $stmt = $db->prepare("INSERT INTO games (game_type, player_1, player_2, board_state, to_move) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("siisi", $game_type, intval($player_1), intval($player_2), $game_state, $to_move);
+    $stmt = $db->prepare("INSERT INTO games (game_type, player_1, player_2, board_state, to_move, winner) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("siisii", $game_type, intval($player_1), intval($player_2), $game_state, $to_move, $winner);
     $stmt->execute();
     $stmt->bind_result($foo);
     $stmt->fetch();
