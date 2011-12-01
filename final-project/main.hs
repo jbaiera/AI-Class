@@ -3,6 +3,7 @@ import Reversi.Strategies
 import Reversi.Interface
 
 main = do
+    {-
     putStr "Greedy vs greedy:           "
     shortSimulate initialBoard 1 greedy greedy
     putStr "Greedy vs evaporation:      "
@@ -21,4 +22,7 @@ main = do
     shortSimulate initialBoard 1 mobility evaporation
     putStr "Mobility vs mobility:       "
     shortSimulate initialBoard 1 mobility mobility
+    -}
+    mapM_ print $ greedyWeighting initialBoard 1
+
 

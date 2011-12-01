@@ -18,6 +18,10 @@ type Weighting = Board -> Player -> [(Position, Confidence)]
 testWeighting :: Weighting
 testWeighting grid player = [((1,2), 22.4)]
 
+greedyWeighting :: Weighting
+greedyWeighting board player = weights
+    where moves = possibleMoves board player
+          weights = [ (pos, weight) | pos <- moves, let weight = fromIntegral (score (play board player pos) player) ]
 
 
 --
