@@ -16,8 +16,47 @@ greedyWeighting board player = weights
           weights = [ (pos, weight) | pos <- moves, let weight = weightOf pos * 100.0 / totalScore ]
           weightOf p = fromIntegral (score (play board player p) player)
 
-minimax :: Weighting -> Strategy
-minimax weighting board player = (0,0)
+-- 
+-- minimax
+-- 
+-- The objective of minimax is to resolve a move from a given move state.
+-- We use a depth bound depth first search to determine a move that will
+-- lead to a maximum utility for the player making the move and a minimum
+-- utility to the opponent.
+--
+-- minimax :: Weighting -> Strategy
+-- minimax weighting board player = (0,0)
+--
+-- This is actually a wrapper for the true minimax algorithm, since the true one
+-- requires a max depth to be passed into it to book keep it's state. 
+
+minimax :: Weighting
+minimax board player = weights
+    where moves = possibleMoves board player
+          maxDepth = 4
+          weights = [ (pos, weight) | pos <- moves, let weight = getMinimax board player maxDepth pos ]
+
+-- true minimax function
+--
+-- we assume that if there are no more possible moves, or if we reach max depth,
+-- we return the utility values at that depth, which is the percent of the board
+-- controlled. (this can be changed, its not set in stone
+--
+-- we assume that player 2 is maximizing and 1 is minimizing in this algorithm
+--
+getMinimax :: Board -> Player -> Depth -> Position -> Confidence
+getMinimax prevBoard player depth position 
+    | depth == 0                                                = utility
+    | length $ possibleMoves $ play prevBoard player pos == 0   = utility
+    | otherwise                                                 = best
+    where utility = playerScore / totalPieces * 100.0
+          playerScore = fromIntegral $ score newState player
+          totalPieces = move newState + 4
+          newState = play prevBoard player pos
+          nextPlayer = if (player == 1) then 2 else 1
+          newMoves = possibleMoves newState nextPlayer
+          childWeights = map (getMinimax newState nextPlayer $ depth - 1) newMoves
+          best = if (player == 2) then maximum childWeights else minimum childWeights
 
 --
 greedy :: Strategy
@@ -27,7 +66,6 @@ greedy board@(Board grid) player = best
           better x y = (score (play board player x) player) > (score (play board player y) player)
 
 
---
 -- evaporation
 --
 --   To be used with mobility strategy. This strategy tries to keep the
