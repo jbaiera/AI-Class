@@ -9,19 +9,13 @@ type Confidence = Float
 
 type Weighting = Board -> Player -> [(Position, Confidence)]
 
---
--- testWeighting
---
--- This function is being used to test the new data type Weighting.
---
-
-testWeighting :: Weighting
-testWeighting grid player = [((1,2), 22.4)]
 
 greedyWeighting :: Weighting
 greedyWeighting board player = weights
     where moves = possibleMoves board player
-          weights = [ (pos, weight) | pos <- moves, let weight = fromIntegral (score (play board player pos) player) ]
+          totalScore = foldr (\x y -> weightOf x + y) 0.0 moves
+          weights = [ (pos, weight) | pos <- moves, let weight = weightOf pos * 100.0 / totalScore ]
+          weightOf p = fromIntegral (score (play board player p) player)
 
 
 --
