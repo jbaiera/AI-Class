@@ -85,10 +85,14 @@ aiCommitMove :: Connection -> GameId -> Player -> Strategy -> IO ()
 aiCommitMove conn game player strategy = do
     let opponent = if player == 1 then 2 else 1
     let fetchQuery = "SELECT board_state FROM games WHERE game_id = ?"
-    let updateQuery = "UPDATE games SET board_state = ?, to_move = ? WHERE game_id = ?"
     fetchResults <- quickQuery' conn fetchQuery [toSql game]
     let board = Board (read (sqlToString $ fetchResults !! 0 !! 0) :: [[Int]])
-    let (Board grid') = play board player (strategy board player)
+    let pass = ((length $ possibleMoves board player) == 0)
+    let gameover = pass && ((length $ possibleMoves board opponent) == 0)
+    let (Board grid') = if pass then board else play board player (strategy board player)
+    let updateQuery = if not gameover
+                        then "UPDATE games SET board_state = ?, to_move = ? WHERE game_id = ?"
+                        else "foo"
     updateResults <- quickQuery' conn updateQuery [SqlString (show grid'), SqlInteger (fromIntegral opponent), SqlInteger (fromIntegral game)]
     return ()
 
