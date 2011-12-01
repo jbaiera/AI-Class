@@ -67,7 +67,10 @@ possibleMoves board player = positions
 play :: Board -> Player -> Position -> Board
 play board player position = board'
     where directions = [ (a,b) | a <- [(-1),0,1], b <- [(-1),0,1], (a,b) /= (0,0) ]
-          board' = foldr (\d b -> capture b player position d) board directions
+          board' = setPos position $ foldr (\d b -> unsetPos position $ capture b player position d) board directions
+          unsetPos position (Board grid) = Board (set grid position 0)
+          setPos position (Board grid) = Board (set grid position player)
+
 
 -- playable checks if a move "makes sense" to make
 playable :: Board -> Player -> Position -> Bool

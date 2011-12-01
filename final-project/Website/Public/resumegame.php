@@ -68,6 +68,7 @@ if (isset($_GET['xpos']) && isset($_GET['ypos'])) {
     $y = $_GET['ypos'];
     if ($board[$x][$y] == 3 && $my_move == true) {
         shell_exec("$program_location/humanplay \"($x,$y)\" \"$to_move\" \"$game_id\"");
+        header("Location: resumegame.php?game_id=$game_id");
     } else {
         // ignore it
     }
