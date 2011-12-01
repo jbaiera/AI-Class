@@ -34,9 +34,11 @@ if ($player_1 == $player_2) {
 } else if ($user_id == $player_1) {
     $player = 1;
     $opponent = 2;
+    $opponent_id = $player_2;
 } else {
     $player = 2;
     $opponent = 1;
+    $opponent_id = $player_1;
 }
 
 if ($player == $to_move) {
@@ -65,6 +67,7 @@ for ($i = 0; $i < 8; $i++)
 
 $num_valid_moves = (strlen($valid_moves_string) - 1) / 6;
 
+if ($my_move)
 for ($i = 0; $i < $num_valid_moves; $i++) {
     // magic! this is from interpreting the string findvalid prints out
     $x = $valid_moves_string[6*$i + 2];
@@ -83,6 +86,9 @@ if (isset($_GET['xpos']) && isset($_GET['ypos'])) {
     }
 }
 
+if (! $my_move) {
+    shell_exec("$program_location/aiplay \"$opponent_id\" \"$to_move\" \"$game_id\" &");
+}
 
 function displayGameBoard($boardstate)
 {

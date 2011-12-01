@@ -80,6 +80,18 @@ commitMove conn game player position = do
     updateResults <- quickQuery' conn updateQuery [SqlString (show grid'), SqlInteger (fromIntegral opponent), SqlInteger (fromIntegral game)]
     return ()
 
+-- Takes a game, player, and strategy and tries to update the database for that move
+aiCommitMove :: Connection -> GameId -> Player -> Strategy -> IO ()
+aiCommitMove conn game player strategy = do
+    let opponent = if player == 1 then 2 else 1
+    let fetchQuery = "SELECT board_state FROM games WHERE game_id = ?"
+    let updateQuery = "UPDATE games SET board_state = ?, to_move = ? WHERE game_id = ?"
+    fetchResults <- quickQuery' conn fetchQuery [toSql game]
+    let board = Board (read (sqlToString $ fetchResults !! 0 !! 0) :: [[Int]])
+    let (Board grid') = play board player (strategy board player)
+    updateResults <- quickQuery' conn updateQuery [SqlString (show grid'), SqlInteger (fromIntegral opponent), SqlInteger (fromIntegral game)]
+    return ()
+
 
 -- Get valid moves for a player in a game
 getAllValid :: Connection -> GameId -> Player -> IO [Position]
