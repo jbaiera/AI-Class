@@ -49,10 +49,19 @@ $program_location = '../..';
 
 $valid_moves_string = shell_exec("$program_location/findvalid $game_id $player");
 
+$blackscore = 0;
+$whitescore = 0;
+
 //initialize the board
 for ($i = 0; $i < 8; $i++)
-    for ($j = 0; $j < 8; $j++)
+    for ($j = 0; $j < 8; $j++) {
         $board[$i][$j] = $board_state[2 + 2*$j + 18*$i];
+        if ($board[$i][$j] == 1) {
+            $blackscore += 1;
+        } else if ($board[$i][$j] == 2) {
+            $whitescore += 1;
+        }
+    }
 
 $num_valid_moves = (strlen($valid_moves_string) - 1) / 6;
 
@@ -137,6 +146,10 @@ function displayGameBoard($boardstate)
             </div>
         </div>
         <div class="rightside">
+        <h3>Scoreboard</h3>
+        <p>Black: <?php echo($blackscore); ?></p>
+        <p>White: <?php echo($whitescore); ?></p>
+        <p>It is <?php if ($to_move == 1) echo("black"); else echo("white"); ?> to move.</p>
         </div>
     </div>
 </body>
