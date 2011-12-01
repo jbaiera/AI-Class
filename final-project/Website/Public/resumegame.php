@@ -152,6 +152,7 @@ function displayGameBoard($boardstate)
             </div>
         </div>
         <div class="rightside">
+        <a href="index.php">Home</a> | <a href="choosegame.php">Other games</a> | <a href="resumegame.php?game_id=<?php echo($game_id);?>">Refresh</a>
         <h3>Scoreboard</h3>
         <p>Black: <?php echo($blackscore); ?></p>
         <p>White: <?php echo($whitescore); ?></p>
