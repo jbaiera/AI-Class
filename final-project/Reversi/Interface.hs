@@ -69,14 +69,25 @@ conn = connectMySQL defaultMySQLConnectInfo {
         }
 
 -- Takes a game, player, and position and tries to update the database for that move
-commitMove :: GameId -> Player -> Position -> IO Connection -> IO ()
-commitMove _ _ _ _ = return ()
+commitMove :: Connection -> GameId -> Player -> Position -> IO ()
+commitMove conn game player position = do
+    let opponent = if player == 1 then 2 else 1
+    let fetchQuery = "SELECT board_state FROM games WHERE game_id = ?"
+    let updateQuery = "UPDATE games SET board_state = ?, to_move = ? WHERE game_id = ?"
+    fetchResults <- quickQuery' conn fetchQuery [toSql game]
+    let board = Board (read (sqlToString $ fetchResults !! 0 !! 0) :: [[Int]])
+    let (Board grid') = play board player position
+    updateResults <- quickQuery' conn updateQuery [SqlString (show grid'), SqlInteger (fromIntegral opponent), SqlInteger (fromIntegral game)]
+    return ()
+
 
 -- Get valid moves for a player in a game
 getAllValid :: Connection -> GameId -> Player -> IO [Position]
 getAllValid conn game player = do
     results <- quickQuery' conn "SELECT board_state FROM games WHERE game_id = ?" [toSql game]
-    let board = Board (read (getString $ results !! 0 !! 0) :: [[Int]])
+    let board = Board (read (sqlToString $ results !! 0 !! 0) :: [[Int]])
     return $ possibleMoves board player
-    where getString (SqlByteString bs) = ByteString.unpack bs
+
+sqlToString (SqlByteString bs) = ByteString.unpack bs
+stringToSql str = ByteString.pack str
 

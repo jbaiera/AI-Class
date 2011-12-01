@@ -83,6 +83,7 @@ valid board@(Board grid) player position@(px, py) direction@(dx, dy)
     | outOfBounds (px+dx, py+dy)                = False
     | current == opponent && next == player     = True
     | next == 0                                 = False
+    | current == player                         = False
     | otherwise                                 = valid board player (px+dx, py+dy) direction
     where current = grid !! px !! py
           next = grid !! (px+dx) !! (py+dy)

@@ -63,6 +63,16 @@ for ($i = 0; $i < $num_valid_moves; $i++) {
     $board[$x][$y] = 3;
 }
 
+if (isset($_GET['xpos']) && isset($_GET['ypos'])) {
+    $x = $_GET['xpos'];
+    $y = $_GET['ypos'];
+    if ($board[$x][$y] == 3 && $my_move == true) {
+        shell_exec("$program_location/humanplay \"($x,$y)\" \"$to_move\" \"$game_id\"");
+    } else {
+        // ignore it
+    }
+}
+
 
 function displayGameBoard($boardstate)
 {
