@@ -9,7 +9,6 @@ type Confidence = Float
 
 type Weighting = Board -> Player -> [(Position, Confidence)]
 
-
 greedyWeighting :: Weighting
 greedyWeighting board player = weights
     where moves = possibleMoves board player
@@ -17,6 +16,8 @@ greedyWeighting board player = weights
           weights = [ (pos, weight) | pos <- moves, let weight = weightOf pos * 100.0 / totalScore ]
           weightOf p = fromIntegral (score (play board player p) player)
 
+minimax :: Weighting -> Strategy
+minimax weighting board player = (0,0)
 
 --
 greedy :: Strategy
