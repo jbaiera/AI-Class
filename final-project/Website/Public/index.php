@@ -9,6 +9,8 @@ if (! isset($_SESSION['user_id']))
 else
 {
     echo('You can log out <a href="logout.php">here</a>.');
+    if ($_SESSION['user_id'] == 1)
+        $_SESSION['admin_mode'] = true;
 }
 
 ?>
