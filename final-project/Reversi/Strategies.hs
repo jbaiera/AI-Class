@@ -16,63 +16,8 @@ greedyWeighting board player = weights
           weights = [ (pos, weight) | pos <- moves, let weight = weightOf pos * 100.0 / totalScore ]
           weightOf p = fromIntegral (score (play board player p) player)
 
--- 
--- minimax
--- 
--- The objective of minimax is to resolve a move from a given move state.
--- We use a depth bound depth first search to determine a move that will
--- lead to a maximum utility for the player making the move and a minimum
--- utility to the opponent.
---
--- minimax :: Weighting -> Strategy
--- minimax weighting board player = (0,0)
---
--- This is actually a wrapper for the true minimax algorithm, since the true one
--- requires a max depth to be passed into it to book keep it's state. 
-
-minimaxW :: Weighting
-minimaxW board player = weights
-    where moves = possibleMoves board player
-          maxDepth = 4
-          weights = [ (pos, weight) | pos <- moves, let weight =  ]
-          firstWeights = map (getMinimax board player player maxDepth) moves
 
 
-minimax :: Strategy
-minimax board player = bestAction
-    where moves = possibleMoves board player
-          maxDepth = 4
-          weights = [ (weight, pos) | pos <- moves, let weight = getMinimax board player player maxDepth pos ]
-          bestAction = snd $ maximum weights
-
--- true minimax function
---
--- we assume that if there are no more possible moves, or if we reach max depth,
--- we return the utility values at that depth, which is the percent of the board
--- controlled. (this can be changed, its not set in stone
---
--- Arguments:
---  Board   : (prevBoard)       : Game Board from previous state
---  Player  : (currentPlayer)   : This player is the player making the move at that point
---  Player  : (maxPlayer)       : The player who initialized the move
---  Int     : (depth)           : depth we are at
---  Position: (pos)             : position we are evaluating
---  Confidence : (return value) : the confidence in that move being the best
--- 
-
-getMinimax :: Board -> Player -> Player -> Int -> Position -> Confidence
-getMinimax prevBoard currentPlayer maxPlayer depth pos
-    | depth == 0                                                      = utility
-    | length $ possibleMoves $ play prevBoard currentPlayer pos == 0  = utility
-    | otherwise                                                       = bestUtil
-    where utility = (score newState currentPlayer) - (score newState nextPlayer)
-          newState = play prevBoard currentPlayer pos
-          nextPlayer = if (player == 1) then 2 else 1
-          newMoves = possibleMoves newState nextPlayer
-          childWeights = map (getMinimax newState nextPlayer maxPlayer $ depth - 1) newMoves
-          bestUtil = if (currentPlayer == maxPlayer) then minimum childWeights else maximum childWeights
-
---
 greedy :: Strategy
 greedy board@(Board grid) player = best
     where moves = possibleMoves board player
