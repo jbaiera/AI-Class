@@ -9,6 +9,11 @@ type Player = Int
 --          1 for player 1
 --          2 for player 2
 
+type GameOverState = Int
+-- choices: 0 for draw
+--          1 for player 1
+--          2 for player 2
+
 type Direction = (Int, Int)
 type Position = (Int, Int)
 
@@ -45,13 +50,13 @@ prettyPrint (Board grid) = do putStrLn "Current score..."
 getOpponent :: Player -> Player
 getOpponent p = 3 - p
 
--- prints the winner
-printWinner :: Board -> IO ()
-printWinner board = putStrLn status
-    where status
-              | score board 1 > score board 2 = "Player 1 wins!"
-              | score board 2 > score board 1 = "Player 2 wins!"
-              | otherwise = "Draw!"
+-- gets the game state status
+getWinner :: Board -> GameOverState
+getWinner board | score1 > score2   = 1
+                | score2 > score1   = 2
+                | otherwise         = 0
+    where score1 = score board 1
+          score2 = score board 2
 
 -- returns the score for that player
 score :: Board -> Player -> Int

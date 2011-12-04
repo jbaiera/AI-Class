@@ -1,6 +1,7 @@
 module Reversi.Strategies where
 
 import Reversi.Game
+import System.Random
 
 type Strategy = Board -> Player -> Position
 
@@ -50,7 +51,17 @@ minimax :: Depth -> Heuristic -> Strategy
 minimax depth heuristic board player = bestMove
     where moves = possibleMoves board player
           scores = [ (score, position) | position <- moves, let score = minimax' depth heuristic player (play board player position) player ]
-          bestMove = snd $ maximum scores
+          maxScore = fst $ maximum scores
+          bestMoves = [ p | (s,p) <- scores, s == maxScore ]
+          bestMove = head bestMoves
+
+randomMinimax :: (RandomGen g) => g -> Depth -> Heuristic -> Strategy
+randomMinimax randomGen depth heuristic board player = bestMove
+    where moves = possibleMoves board player
+          scores = [ (score, position) | position <- moves, let score = minimax' depth heuristic player (play board player position) player ]
+          maxScore = fst $ maximum scores
+          bestMoves = [ p | (s,p) <- scores, s == maxScore ]
+          bestMove = bestMoves !! (fst (random randomGen) `mod` (length bestMoves))
 
 minimax' :: Depth -> Heuristic -> Player -> Board -> Player -> Int
 minimax' depth heuristicFunction maxPlayer board currPlayer
@@ -62,6 +73,14 @@ minimax' depth heuristicFunction maxPlayer board currPlayer
           best = choose childWeights
           choose | currPlayer == maxPlayer  = maximum
                  | otherwise                = minimum
+
+randomAlphabeta :: (RandomGen g) => g-> Depth -> Heuristic -> Strategy
+randomAlphabeta randomGen depth heuristic board player = bestMove
+    where moves = possibleMoves board player
+          scores = [ (val, position) | position <- moves, let val = alphabeta' depth heuristic player (play board player position) player 10000 0 ]
+          maxScore = fst $ maximum scores
+          bestMoves = [ p | (s,p) <- scores, s == maxScore ]
+          bestMove = bestMoves !! (fst (random randomGen) `mod` (length bestMoves))
 
 alphabeta :: Depth -> Heuristic -> Strategy
 alphabeta depth heuristic board player = bestMove

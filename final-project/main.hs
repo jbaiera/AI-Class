@@ -1,6 +1,7 @@
 import Reversi.Game
 import Reversi.Strategies
 import Reversi.Interface
+import System.Random
 
 main = do
     {-
@@ -23,6 +24,13 @@ main = do
     putStr "Mobility vs mobility:       "
     shortSimulate initialBoard 1 mobility mobility
     -}
-    print $ minimax 4 greedyEval initialBoard 1
-    simulate initialBoard 1 greedy alphabeta1
+    let strategy = randomAlphabeta (mkStdGen 1324) 6 greedyEval
+    let strategies = [ randomAlphabeta (mkStdGen i) 4 greedyEval | i <- [1..100] ]
+    --printAndRun initialBoard 1 strategy greedy
+    --mapM_ (\s -> print $ simulate initialBoard 1 s greedy) strategies
+    let results = foldr (\s (w1,w2) -> case (simulate initialBoard 1 s greedy) of
+                                            0 -> (w1, w2)
+                                            1 -> (w1+1, w2)
+                                            2 -> (w1, w2+1)) (0,0) strategies
+    print results
 
