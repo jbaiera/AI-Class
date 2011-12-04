@@ -13,8 +13,8 @@ import qualified Data.ByteString.Char8 as ByteString
 -- plays a game between two functions, printing the state of the board each time
 simulate :: Board -> Player -> Strategy -> Strategy -> IO ()
 simulate board player strategy1 strategy2
-    | possibleMoves board player == []  = do prettyPrint board
-                                             printWinner board
+    | possibleMoves board player == [pass]  = do prettyPrint board
+                                                 printWinner board
     | player == 1  = do prettyPrint board
                         simulate (play board 1 $ strategy1 board player) 2 strategy1 strategy2
     | otherwise    = do prettyPrint board

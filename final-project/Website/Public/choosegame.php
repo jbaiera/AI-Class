@@ -38,8 +38,12 @@ function displayGames($user_id, $winner) {
             $against = ' for practice';
         } else {
             $against = ' against ';
-            if ($opponent = -1) {
+            if ($opponent == -1) {
                 $against .= "greedy AI";
+            } else if ($opponent == -2) {
+                $against .= "minimax (4-ply)";   
+            } else if ($opponent == -3) {
+                $against .= "minimax (8-ply)";
             } else {
                 $against .= "unknown player";
             }

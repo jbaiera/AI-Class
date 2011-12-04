@@ -24,7 +24,11 @@ if (isset($_POST['opponent'])) {
     $oppString = $_POST['opponent'];
     if ($oppString == "greedy") {
         $opponent = -1;
-    } else if ($oppString == "practice") {
+    } else if ($oppString == "minimax4") {
+        $opponent = -2;
+    } else if ($oppString == "minimax8") {
+        $opponent = -3;
+    }else if ($oppString == "practice") {
         $opponent = $player;
     }
 
@@ -65,6 +69,8 @@ if (isset($_POST['opponent'])) {
             <td>Opponent
             <td><select name="opponent">
                     <option value="greedy">Greedy</option>
+                    <option value="minimax4">Minimax (4 ply)</option>
+                    <option value="minimax8">Minimax (8 ply)</option>
                     <option value="practice">Practice</option>
                 </select>
         <tr>

@@ -53,7 +53,8 @@ $valid_moves_string = shell_exec("$program_location/findvalid $game_id $player")
 
 if (strlen($valid_moves_string) == 3) {
     // no valid moves
-    shell_exec("$program_location/aiplay \"$opponent_id\" \"$to_move\" \"$game_id\" &");
+    $ai_id = -1 * $opponent_id;
+    shell_exec("$program_location/aiplay \"$ai_id\" \"$to_move\" \"$game_id\" &");
 }
 
 
@@ -93,7 +94,8 @@ if (isset($_GET['xpos']) && isset($_GET['ypos'])) {
 }
 
 if (! $my_move) {
-    shell_exec("$program_location/aiplay \"$opponent_id\" \"$to_move\" \"$game_id\" &");
+    $ai_id = -1 * $opponent_id;
+    shell_exec("$program_location/aiplay \"$ai_id\" \"$to_move\" \"$game_id\" &");
 }
 
 function displayGameBoard($boardstate)
