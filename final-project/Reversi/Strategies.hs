@@ -40,6 +40,9 @@ minimax5 = minimax 5 greedyEval
 minimax8 :: Strategy
 minimax8 = minimax 8 greedyEval
 
+alphabeta1 :: Strategy
+alphabeta1 = alphabeta 6 greedyEval
+
 greedyEval :: Heuristic
 greedyEval board player position = score (play board player position) player
 
@@ -59,6 +62,35 @@ minimax' depth heuristicFunction maxPlayer board currPlayer
           best = choose childWeights
           choose | currPlayer == maxPlayer  = maximum
                  | otherwise                = minimum
+
+alphabeta :: Depth -> Heuristic -> Strategy
+alphabeta depth heuristic board player = bestMove
+    where moves = possibleMoves board player
+          scores = [ (val, position) | position <- moves, let val = alphabeta' depth heuristic player (play board player position) player 10000 0 ]
+          bestMove = snd $ maximum scores
+
+--            depth    heuristic    maxPlayer board    current   alpha  beta   result 
+alphabeta' :: Depth -> Heuristic -> Player -> Board -> Player -> Int -> Int -> Int
+alphabeta' depth heuristicFunction maxPlayer board currPlayer alpha beta
+    | depth == 0    = heuristicFunction board maxPlayer pass
+    | otherwise     = result
+    where moves = possibleMoves board currPlayer
+          maxing = (currPlayer == maxPlayer)
+          children = map (\m -> play board currPlayer m) moves
+          result | maxing       = alpha'
+                 | otherwise    = beta'
+          alpha' = cfold (\a -> beta <= a)  (\m a -> max a $ recurse m a beta)  (recurse (head moves) alpha beta) (tail moves)
+          beta'  = cfold (\b -> alpha <= b) (\m b -> min b $ recurse m alpha b) (recurse (head moves) alpha beta) (tail moves)
+          nextPlayer = getOpponent currPlayer
+          recurse m a b = alphabeta' (depth-1) heuristicFunction maxPlayer (play board currPlayer m) nextPlayer a b
+
+-- cfold takes a cutoff criteria, too
+cfold :: (b -> Bool) -> (a -> b -> b) -> b -> [a] -> b
+cfold _ _ y [] = y
+cfold cutoff f y (x:xs)
+    | cutoff y  = y
+    | otherwise = cfold cutoff f (f x y) xs
+
 
 -- evaporation
 --

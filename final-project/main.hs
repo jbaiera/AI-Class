@@ -24,5 +24,5 @@ main = do
     shortSimulate initialBoard 1 mobility mobility
     -}
     print $ minimax 4 greedyEval initialBoard 1
-    simulate initialBoard 1 greedy minimax5
+    simulate initialBoard 1 greedy alphabeta1
 
