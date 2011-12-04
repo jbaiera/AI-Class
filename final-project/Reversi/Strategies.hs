@@ -35,45 +35,21 @@ greedyEval :: Heuristic
 greedyEval board player position = score (play board player position) player
 
 minimax :: Depth -> Heuristic -> Strategy
-minimax depth heuristic board player = fst $ minimax' depth heuristic player board player
+minimax depth heuristic board player = bestMove
+    where moves = possibleMoves board player
+          scores = [ (score, position) | position <- moves, let score = minimax' depth heuristic player (play board player position) player ]
+          bestMove = snd $ maximum scores
 
-minimax' :: Depth -> Heuristic -> Player -> Board -> Player -> (Position, Int)
-minimax' depth heuristicFunction maxPlayer board currPlayer = result
-    where heuristic = heuristicFunction board maxPlayer
-          moves = possibleMoves board currPlayer
-          boards = map (\m -> (m, play board currPlayer m)) moves
-          next = getOpponent currPlayer
-          children = map (\(m, b) -> (m, snd $ minimax' (depth-1) heuristicFunction maxPlayer b (getOpponent next))) boards
-          comparator | currPlayer == maxPlayer  = (>)
-                     | otherwise                = (<)
-          choose = (\x y -> if (heuristic x `comparator` heuristic y) then x else y)
-          bestMove = foldr choose (head moves) (tail moves)
-          pickBest = (\(m1,s1) (m2,s2) -> if (s1 `comparator` s2) then (m1,s1) else (m2,s2))
-          result | depth == 0   = (bestMove, heuristic bestMove)
-                 | otherwise    = foldr pickBest (head children) (tail children)
-
-{-
-negamax :: Depth -> Strategy
-negamax depth board player = negamaxResults
-    where opponent = getOpponent player
-          moves = possibleMoves board player
-          boards = map (\m -> (m, play board player m)) moves
-          children = map (\(m,b) -> (m, negamax (depth-1) b opponent)) boards
-          heuristic = greedyEval board player
-          bestMove = foldr (\x y -> if (heuristic x > heuristic y) then x else y) (head moves) (tail moves)
-          negamaxResults | depth == 0   = bestMove
-                         | otherwise    = foldr (\(m,p) -> 
--}
-{-
-minWeight :: [(Position, Confidence)] -> (Position, Confidence)
-minWeight = swap . minimum . (map swap)
-
-maxWeight :: [(Position, Confidence)] -> (Position, Confidence)
-maxWeight = swap . maximum . (map swap)
-
-swap :: (a, b) -> (b, a)
-swap (x,y) = (y,x)
--}
+minimax' :: Depth -> Heuristic -> Player -> Board -> Player -> Int
+minimax' depth heuristicFunction maxPlayer board currPlayer
+    | depth == 0    = heuristicFunction board maxPlayer pass
+    | otherwise     = score
+    where moves = possibleMoves board currPlayer
+          nextPlayer = getOpponent currPlayer
+          childWeights = map (\m -> minimax' (depth-1) heuristicFunction maxPlayer (play board currPlayer m) nextPlayer) moves
+          score = choose childWeights
+          choose | currPlayer == maxPlayer  = maximum
+                 | otherwise                = minimum
 
 -- evaporation
 --
