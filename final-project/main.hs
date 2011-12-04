@@ -23,6 +23,6 @@ main = do
     putStr "Mobility vs mobility:       "
     shortSimulate initialBoard 1 mobility mobility
     -}
-    mapM_ print $ greedyWeighting initialBoard 1
+    print $ minimax 4 greedyEval initialBoard 1
 
 

@@ -41,6 +41,10 @@ prettyPrint (Board grid) = do putStrLn "Current score..."
                                     transchar 2 = '@'
                                     board = Board grid
 
+-- gets the opponent of the current player
+getOpponent :: Player -> Player
+getOpponent p = 3 - p
+
 -- prints the winner
 printWinner :: Board -> IO ()
 printWinner board = putStrLn status
@@ -60,14 +64,20 @@ move board = score board 1 + score board 2 - 4
 
 -- gives all the possible moves for a certain position
 possibleMoves :: Board -> Player -> [Position]
-possibleMoves board player = positions
+possibleMoves board player
+    | length positions == 0     = [pass]
+    | otherwise                 = positions
     where positions = [ (x,y) | x <- [0..7], y <- [0..7], playable board player (x,y) ]
+
+pass :: Position
+pass = ((-1),(-1))
 
 -- play takes a player and position and execute the move
 play :: Board -> Player -> Position -> Board
 play board player position = board'
     where directions = [ (a,b) | a <- [(-1),0,1], b <- [(-1),0,1], (a,b) /= (0,0) ]
-          board' = setPos position $ foldr (\d b -> unsetPos position $ capture b player position d) board directions
+          board' | position == pass = board
+                 | otherwise        = setPos position $ foldr (\d b -> unsetPos position $ capture b player position d) board directions
           unsetPos position (Board grid) = Board (set grid position 0)
           setPos position (Board grid) = Board (set grid position player)
 
