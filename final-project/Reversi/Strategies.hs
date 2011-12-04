@@ -25,8 +25,17 @@ greedy board@(Board grid) player = best
           best = foldr (\x y -> if (better x y) then x else y) (head moves) (tail moves)
           better x y = (score (play board player x) player) > (score (play board player y) player)
 
+minimax2 :: Strategy
+minimax2 = minimax 2 greedyEval
+
+minimax3 :: Strategy
+minimax3 = minimax 3 greedyEval
+
 minimax4 :: Strategy
 minimax4 = minimax 4 greedyEval
+
+minimax5 :: Strategy
+minimax5 = minimax 5 greedyEval
 
 minimax8 :: Strategy
 minimax8 = minimax 8 greedyEval
@@ -43,11 +52,11 @@ minimax depth heuristic board player = bestMove
 minimax' :: Depth -> Heuristic -> Player -> Board -> Player -> Int
 minimax' depth heuristicFunction maxPlayer board currPlayer
     | depth == 0    = heuristicFunction board maxPlayer pass
-    | otherwise     = score
+    | otherwise     = best
     where moves = possibleMoves board currPlayer
           nextPlayer = getOpponent currPlayer
           childWeights = map (\m -> minimax' (depth-1) heuristicFunction maxPlayer (play board currPlayer m) nextPlayer) moves
-          score = choose childWeights
+          best = choose childWeights
           choose | currPlayer == maxPlayer  = maximum
                  | otherwise                = minimum
 
