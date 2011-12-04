@@ -8,7 +8,10 @@ main = do
     let strategyId = read (args !! 0) :: Int
     let player = read (args !! 1) :: Int
     let gameId = read (args !! 2) :: Int
-    let strategy = if strategyId == 1 then greedy else greedy
+    let strategy = case (strategyId) of
+                    1 -> greedy
+                    2 -> minimax4
+                    3 -> minimax8
     connection <- conn
     aiCommitMove connection gameId player strategy
 

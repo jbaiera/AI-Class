@@ -25,6 +25,12 @@ greedy board@(Board grid) player = best
           best = foldr (\x y -> if (better x y) then x else y) (head moves) (tail moves)
           better x y = (score (play board player x) player) > (score (play board player y) player)
 
+minimax4 :: Strategy
+minimax4 = minimax 4 greedyEval
+
+minimax8 :: Strategy
+minimax8 = minimax 8 greedyEval
+
 greedyEval :: Heuristic
 greedyEval board player position = score (play board player position) player
 
