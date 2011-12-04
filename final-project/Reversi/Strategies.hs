@@ -12,6 +12,13 @@ type Weighting = Board -> Player -> [(Position, Confidence)]
 
 type Heuristic = Board -> Player -> Position -> Int
 
+greedyWeighting :: Weighting
+greedyWeighting board player = weights
+    where moves = possibleMoves board player
+          totalScore = foldr (\x y -> weightOf x + y) 0.0 moves
+          weights = [ (pos, weight) | pos <- moves, let weight = weightOf pos * 100.0 / totalScore ]
+          weightOf p = fromIntegral (score (play board player p) player)
+
 greedy :: Strategy
 greedy board@(Board grid) player = best
     where moves = possibleMoves board player
