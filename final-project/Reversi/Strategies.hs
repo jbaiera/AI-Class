@@ -83,11 +83,11 @@ heatmapEval board player position = rawEval + cornerScore board player
 
 
 cornerScore :: Board -> Player -> Int
-cornerScore (Board grid) player = result
+cornerScore board@(Board grid) player = result
     where corners = [ (x,y) | x <- [0,7], y <- [0,7] ]
           possesses (x,y) p = (grid !! x !! y) == p
           opponent = getOpponent player
-          values = map (\c -> if possesses c player then 10 else if possesses c opponent then (-20) else 0) corners
+          values = map (\c -> if possesses c player then 5 else if possesses c opponent then 0 else 0) corners
           result = sum values
 
 

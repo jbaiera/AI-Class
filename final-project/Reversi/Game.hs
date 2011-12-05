@@ -46,6 +46,10 @@ prettyPrint (Board grid) = do putStrLn "Current score..."
                                     transchar 2 = '@'
                                     board = Board grid
 
+gameOver :: Board -> Bool
+gameOver board = (score board 1 + score board 2 == 64) || noMoves
+    where noMoves = (length $ possibleMoves board 1 ++ possibleMoves board 2) == 0
+
 -- gets the opponent of the current player
 getOpponent :: Player -> Player
 getOpponent p = 3 - p
