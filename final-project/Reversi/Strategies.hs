@@ -58,11 +58,12 @@ greedyEval :: Heuristic
 greedyEval board player position = score (play board player position) player
 
 heatmapEval :: Heuristic
-heatmapEval board player position
+heatmapEval board player position = rawEval + cornerScore board player
+    {-
     | position == pass  = rawEval
     | posRegion == 5    = rawEval + 30
+    | posRegion == 5    = rawEval - 10
     | otherwise         = rawEval
-    {-
     | posRegion == 5    = 20 + rawEval                              -- TAKE IT
     | posRegion == 4    = rawEval - 20                               -- RUN AWAY
     | posRegion == 3    = rawEval + 10     -- Less than perfect 
@@ -79,6 +80,16 @@ heatmapEval board player position
                        [3,2,1,1,1,1,2,3],
                        [4,4,2,2,2,2,4,4],
                        [5,4,3,3,3,3,4,5]]
+
+
+cornerScore :: Board -> Player -> Int
+cornerScore (Board grid) player = result
+    where corners = [ (x,y) | x <- [0,7], y <- [0,7] ]
+          possesses (x,y) p = (grid !! x !! y) == p
+          opponent = getOpponent player
+          values = map (\c -> if possesses c player then 10 else if possesses c opponent then (-20) else 0) corners
+          result = sum values
+
 
 -- Complex Strategies =========================================================
 
