@@ -59,12 +59,16 @@ greedyEval board player position = score (play board player position) player
 
 heatmapEval :: Heuristic
 heatmapEval board player position
-    | position == pass  = 0
-    | posRegion == 5    = 100                                       -- TAKE IT
-    | posRegion == 4    = 0                                         -- RUN AWAY
-    | posRegion == 3    = floor $ (fromIntegral rawEval) * 1.25     -- Less than perfect 
-    | posRegion == 2    = floor $ (fromIntegral rawEval) * 0.5      -- RUN slightly less
+    | position == pass  = rawEval
+    | posRegion == 5    = rawEval + 30
+    | otherwise         = rawEval
+    {-
+    | posRegion == 5    = 20 + rawEval                              -- TAKE IT
+    | posRegion == 4    = rawEval - 20                               -- RUN AWAY
+    | posRegion == 3    = rawEval + 10     -- Less than perfect 
+    | posRegion == 2    = rawEval - 10     -- RUN slightly less
     | otherwise         = rawEval                                   -- Whatever
+    -}
     where posRegion = (regionmap !! (fst position)) !! (snd position)
           rawEval   = greedyEval board player position
           regionmap = [[5,4,3,3,3,3,4,5],
