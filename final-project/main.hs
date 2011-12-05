@@ -24,6 +24,7 @@ main = do
     putStr "Mobility vs mobility:       "
     shortSimulate initialBoard 1 mobility mobility
     -}
+    {-
     let strategy = randomAlphabeta (mkStdGen 1324) 6 greedyEval
     let strategies = [ randomAlphabeta (mkStdGen i) 6 greedyEval | i <- [1..100] ]
     --printAndRun initialBoard 1 strategy greedy
@@ -33,4 +34,6 @@ main = do
                                             1 -> (w1+1, w2)
                                             2 -> (w1, w2+1)) (0,0) strategies
     print results
+    -}
+    printAndRun initialBoard 1 (randomAlphabeta (mkStdGen 1324) 6 heatmapEval) greedy
 
