@@ -25,7 +25,7 @@ main = do
     shortSimulate initialBoard 1 mobility mobility
     -}
     let strategy = randomAlphabeta (mkStdGen 1324) 6 greedyEval
-    let strategies = [ randomAlphabeta (mkStdGen i) 6 greedyEval | i <- [1..50] ]
+    let strategies = [ randomAlphabeta (mkStdGen i) 6 greedyEval | i <- [1..100] ]
     --printAndRun initialBoard 1 strategy greedy
     --mapM_ (\s -> print $ simulate initialBoard 1 s greedy) strategies
     let results = foldr (\s (w1,w2) -> case (simulate initialBoard 1 s greedy) of
