@@ -3,6 +3,8 @@ module Reversi.Strategies where
 import Reversi.Game
 import System.Random
 
+-- Types ======================================================================
+
 type Strategy = Board -> Player -> Position
 
 -- Confidence should be in the range of 0.0 to 100.0.
@@ -13,12 +15,18 @@ type Weighting = Board -> Player -> [(Position, Confidence)]
 
 type Heuristic = Board -> Player -> Position -> Int
 
+type Heatmap = [[Int]]
+
+-- Weighting ==================================================================
+
 greedyWeighting :: Weighting
 greedyWeighting board player = weights
     where moves = possibleMoves board player
           totalScore = foldr (\x y -> weightOf x + y) 0.0 moves
           weights = [ (pos, weight) | pos <- moves, let weight = weightOf pos * 100.0 / totalScore ]
           weightOf p = fromIntegral (score (play board player p) player)
+
+-- Strategies =================================================================
 
 greedy :: Strategy
 greedy board@(Board grid) player = best
@@ -44,8 +52,30 @@ minimax8 = minimax 8 greedyEval
 alphabeta1 :: Strategy
 alphabeta1 = alphabeta 6 greedyEval
 
+-- Heuristics =================================================================
+
 greedyEval :: Heuristic
 greedyEval board player position = score (play board player position) player
+
+heatmapEval :: Heuristic
+heatmapEval board player position
+    | posRegion == 5    = 100                       -- TAKE IT
+    | posRegion == 4    = 0                         -- RUN AWAY
+    | posRegion == 3    = floor $ rawEval * 1.25    -- Less than perfect 
+    | posRegion == 2    = floor $ rawEval * 0.5     -- RUN slightly less
+    | otherwise         = rawEval                   -- Whatever
+    where posRegion = (regionmap !! (fst position)) !! (snd position)
+          rawEval   = greedyEval board player position
+          regionmap = [[5,4,3,3,3,3,4,5],
+                       [4,4,2,2,2,2,4,4],
+                       [3,2,1,1,1,1,2,3],
+                       [3,2,1,1,1,1,2,3],
+                       [3,2,1,1,1,1,2,3],
+                       [3,2,1,1,1,1,2,3],
+                       [4,4,2,2,2,2,4,4],
+                       [5,4,3,3,3,3,4,5]]
+
+-- Complex Strategies =========================================================
 
 minimax :: Depth -> Heuristic -> Strategy
 minimax depth heuristic board player = bestMove
