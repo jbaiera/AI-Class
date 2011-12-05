@@ -59,6 +59,7 @@ greedyEval board player position = score (play board player position) player
 
 heatmapEval :: Heuristic
 heatmapEval board player position
+    | position == pass  = 0
     | posRegion == 5    = 100                                       -- TAKE IT
     | posRegion == 4    = 0                                         -- RUN AWAY
     | posRegion == 3    = floor $ (fromIntegral rawEval) * 1.25     -- Less than perfect 
