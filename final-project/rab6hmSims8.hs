@@ -3,7 +3,7 @@ import Reversi.Strategies
 import Reversi.Interface
 import System.Random
 
-roundNums = [1..100]
+roundNums = [701..800]
 
 greedySeed = 123421
 rab4hmSeed = 135754
