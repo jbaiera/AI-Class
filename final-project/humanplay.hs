@@ -1,4 +1,5 @@
 import Reversi.Interface
+import Reversi.SqlInterface
 import Reversi.Game
 import System.Environment
 
