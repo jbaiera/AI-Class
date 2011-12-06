@@ -7,6 +7,7 @@ all :
 
 wc : 
 	find . | grep "\.hs$$\|\.sql$$\|\.php$$\|\.css$$" | xargs wc -l
+	find . | grep "\.hs$$" | xargs wc -l
 
 clean : 
 	find . | grep "\.o$$" | xargs rm -f

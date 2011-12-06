@@ -4,34 +4,29 @@ import Reversi.Interface
 import System.Random
 
 main = do
-    {-
-    putStr "Greedy vs greedy:           "
-    shortSimulate initialBoard 1 greedy greedy
-    putStr "Greedy vs evaporation:      "
-    shortSimulate initialBoard 1 greedy evaporation
-    putStr "Greedy vs mobility:         "
-    shortSimulate initialBoard 1 greedy mobility
-    putStr "Evaporation vs greedy:      "
-    shortSimulate initialBoard 1 evaporation greedy
-    putStr "Evaporation vs evaporation: "
-    shortSimulate initialBoard 1 evaporation evaporation
-    putStr "Evaporation vs mobility:    "
-    shortSimulate initialBoard 1 evaporation mobility
-    putStr "Mobility vs greedy:         "
-    shortSimulate initialBoard 1 mobility greedy
-    putStr "Mobility vs evaporation:    "
-    shortSimulate initialBoard 1 mobility evaporation
-    putStr "Mobility vs mobility:       "
-    shortSimulate initialBoard 1 mobility mobility
-    -}
-    let strategy = randomAlphabeta (mkStdGen 1324) 6 greedyEval
-    let strategies = [ randomAlphabeta (mkStdGen i) 4 heatmapEval | i <- [1..100] ]
+    let strategy = randomAlphabeta (mkStdGen 1324) 4 greedyEval
+    let strategies = [ randomAlphabeta (mkStdGen i) 6 heatmapEval | i <- [1..10] ]
+    let strategies' = [ randomAlphabeta (mkStdGen i) 4 greedyEval | i <- [10,9..1] ]
+    let pairs = zip strategies strategies'
     --printAndRun initialBoard 1 strategy greedy
     --mapM_ (\s -> print $ simulate initialBoard 1 s greedy) strategies
-    let results = foldr (\s (w1,w2) -> case (simulate initialBoard 1 s greedy) of
+    let results = map (\(s1,s2) -> simulate initialBoard 1 s1 s2) pairs
+    let sum = foldr (\w (w1,w2) -> case w of
+                                    0 -> (w1, w2)
+                                    1 -> (w1+1, w2)
+                                    2 -> (w1, w2+1)) (0,0) results
+    print sum
+    {-
+    let results = foldr (\(s1,s2) (w1,w2) -> case (simulate initialBoard 1 s1 s2) of
                                             0 -> (w1, w2)
                                             1 -> (w1+1, w2)
-                                            2 -> (w1, w2+1)) (0,0) strategies
+                                            2 -> (w1, w2+1)) (0,0) pairs
     print results
+    let results2 = foldr (\(s1,s2) (w1,w2) -> case (simulate initialBoard 1 s2 s1) of
+                                            0 -> (w1, w2)
+                                            1 -> (w1+1, w2)
+                                            2 -> (w1, w2+1)) (0,0) pairs
+    print results2
+    -}
     --printAndRun initialBoard 1 (randomAlphabeta (mkStdGen 1720) 6 heatmapEval) greedy
 
