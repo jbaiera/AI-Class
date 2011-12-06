@@ -35,25 +35,25 @@ summarize results black white = do
           bavg  = (fromIntegral $ foldr (\(_,x,_) n -> x+n) 0 results) / (fromIntegral $ length results)
 
 main = do
-    putStrLn "greedy vs. greedy:"
-    let greedyResults = doSimulation greedyList greedyList
+    putStrLn "rab4gr vs. greedy:"
+    let greedyResults = doSimulation rab4grList greedyList
     print greedyResults
-    summarize greedyResults "greedy" "greedy"
+    summarize greedyResults "rab4gr" "greedy"
     --
-    putStrLn "greedy vs. rab4hm:"
-    let rab4hmResults = doSimulation greedyList rab4hmList
+    putStrLn "rab4gr vs. rab4hm:"
+    let rab4hmResults = doSimulation rab4grList rab4hmList
     print rab4hmResults
-    summarize rab4hmResults "greedy" "rab4hm"
+    summarize rab4hmResults "rab4gr" "rab4hm"
     --
-    putStrLn "greedy vs. rab6hm:"
-    let rab6hmResults = doSimulation greedyList rab6hmList
+    putStrLn "rab4gr vs. rab6hm:"
+    let rab6hmResults = doSimulation rab4grList rab6hmList
     print rab6hmResults
-    summarize rab6hmResults "greedy" "rab6hm"
+    summarize rab6hmResults "rab4gr" "rab6hm"
     --
-    putStrLn "greedy vs. rab4gr:"
-    let rab4grResults = doSimulation greedyList rab4grList
+    putStrLn "rab4gr vs. rab4gr:"
+    let rab4grResults = doSimulation rab4grList rab4grList
     print rab4grResults
-    summarize rab4grResults "greedy" "rab4gr"
+    summarize rab4grResults "rab4gr" "rab4gr"
     --
     return ()
 
