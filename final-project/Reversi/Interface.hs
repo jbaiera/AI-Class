@@ -22,6 +22,15 @@ printAndRun board player strategy1 strategy2
     where bothPass = ((possibleMoves board player) == [pass]) && ((possibleMoves board (getOpponent player)) == [pass])
 
 -- plays a game between two strategies and returns the game state
+simulateScore :: Board -> Player -> Strategy -> Strategy -> (GameOverState, Int, Int)
+simulateScore board player strategy1 strategy2
+    | bothPass = (getWinner board, score board 1, score board 2)
+    | player == 1  = simulateScore (play board 1 $ strategy1 board player) 2 strategy1 strategy2
+    | otherwise    = simulateScore (play board 2 $ strategy2 board player) 1 strategy1 strategy2
+    where bothPass = ((possibleMoves board player) == [pass]) && ((possibleMoves board (getOpponent player)) == [pass])
+
+
+-- plays a game between two strategies and returns the game state
 simulate :: Board -> Player -> Strategy -> Strategy -> GameOverState
 simulate board player strategy1 strategy2
     | bothPass = getWinner board
