@@ -10,6 +10,14 @@ all :
 	ghc --make rab4hmSims2
 	ghc --make rab6hmSims1
 	ghc --make rab6hmSims2
+	ghc --make rab6hmSims3
+	ghc --make rab6hmSims4
+	ghc --make rab6hmSims5
+	ghc --make rab6hmSims6
+	ghc --make rab6hmSims7
+	ghc --make rab6hmSims8
+	ghc --make rab6hmSims9
+	ghc --make rab6hmSims10
 	ghc --make greedySims1
 	ghc --make greedySims2
 
